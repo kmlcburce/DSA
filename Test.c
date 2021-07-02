@@ -195,7 +195,7 @@ int search(Student list[], int n, int id) {
     return -1;
 }
 
-
+//make 5 different problems based on structure above
 
 
 
