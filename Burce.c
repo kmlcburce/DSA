@@ -217,10 +217,15 @@ Student createStudent(int id, Name name) {
 // 5 problems based on the given questions
 
 // Insert student before Nth element
+Student insertBefore(Student n[], int elem);
 // Insert student after Nth element
+Student insertAfter(Student n[], int elem);
 // Delete Student with a given ID number
+Student DeleteById(Student n[], int id);
 // Sort student list based on Last Name
-// Create a new list based on students that have passing grades (3.0)
+Student sortList(Student n[]);
+// Create and return a new list based on students that have passing the semester (3.0)
+Student returnPassed(Student n[]);
 
 
 
