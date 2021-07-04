@@ -214,7 +214,13 @@ Student createStudent(int id, Name name) {
 }
 
 
+// 5 problems based on the given questions
 
+// Insert student before Nth element
+// Insert student after Nth element
+// Delete Student with a given ID number
+// Sort student list based on Last Name
+// Create a new list based on students that have passing grades (3.0)
 
 
 
