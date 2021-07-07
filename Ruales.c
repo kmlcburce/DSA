@@ -12,6 +12,7 @@
 // Create a function that will encode the 5 scores of the student.
 
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
 
 #define MAX_SCORE 5
@@ -43,34 +44,61 @@ void recordScore(Student *s, float scores[], int n);
 Name createName(String fname, String mname, String lname);
 Student createStudent(int id, Name name);
 
+void displayName(Name n);
+void displayAllNames(Name *nList);
+
 Boolean insertFirst(Student list[], int *n, Student s);
 Boolean insertLast(Student list[], int *n, Student s);
 Student deleteFirst(Student list[], int *n);
 Student deleteLast(Student list[], int *n);
 int search(Student list[], int n, int id);
 
+/*  Create a function that would list all the names of the student that has passed
+ *  in the course.
+ */
+Name *getNamesPassed(Student list[], int n);
+
+// Create a function that would return the student id of the requested students with a particular last name
+int *returnID(Student list[], int n, String lname);
+
 int main() {
     Student list[MAX_STUDENT];
     int count = 0;
-    float s[5] = {3.0, 3.0, 3.0, 1.0, 5.0};
-
+    float s1[5] = {5.0, 5.0, 5.0, 1.0, 5.0};
+    float s2[5] = {3.0, 3.0, 3.0, 3.0, 3.0};
+    float s3[5] = {1.0, 2.0, 2.0, 3.0, 3.0};
+    float s4[5] = {3.0, 3.0, 2.0, 1.0, 1.0};
+    float s5[5] = {1.0, 2.0, 1.0, 1.0, 1.0};
+    Name *passed;
+    int *id;
 
     list[0] = createStudent(1001, createName("Kyle", "Castro", "Burce"));
-    list[1] = createStudent(1002, createName("Sugar", "Librero", "Vender")); //Camae mana mao na sugar
-    count = 2;
-    // list[2] = createStudent(1003, createName("Christoph", "Gwapo", "Carreon"));
-    // list[3] = createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")); 
-    // list[4] = createStudent(1005, createName("Fitz", "Napulihan", "Martin")); 
+    list[1] = createStudent(1002, createName("Sugar", "Librero", "Vender"));
+    list[2] = createStudent(1003, createName("Christoph", "Gwapo", "Carreon"));
+    list[3] = createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")); 
+    list[4] = createStudent(1005, createName("Fitz", "Napulihan", "Martin")); 
+    count = 5;
 
-
-    recordScore(&list[3], s, 5);
-
-    printf("\n\nDisplay One Student:\n");
-    displayStudent(list[1]);
+    recordScore(&list[0], s1, 5);
+    recordScore(&list[1], s2, 5);
+    recordScore(&list[2], s3, 5);
+    recordScore(&list[3], s4, 5);
+    recordScore(&list[4], s5, 5);
 
     printf("\n\nDisplay All Student:\n");
     displayStudents(list, 5);
 
+    passed = getNamesPassed(list, count);
+
+    printf("Students Who Passed.\n");
+    displayAllNames(passed);
+
+    printf("ID number with students that has the last name Carreon:\n");
+    id = returnID(list,count,"Carreon");
+    displayID(id);
+
+    free(passed); 
+    free(id);
     return 0;
 }
 
@@ -93,7 +121,7 @@ void displayStudents(Student studs[], int n) {
     int i, j;
     printf("%10s | %30s | %s\n", "ID", "NAME", "SCORE");
     for(i=0; i<n; i++) {
-        printf("%10d | %14s %15s | {", studs[i].studID, studs[i].studName.fname, studs[i].studName.lname);
+        printf("%10d | %14s %15s | {", studs[i].studID, studs[i].studName.fname, studs[i].studName.lname); 
         for(j=0; j<MAX_SCORE; ++j) {
             printf("%.2f", studs[i].studScore[j]);
             if(j < MAX_SCORE-1) {
@@ -162,7 +190,7 @@ Student deleteFirst(Student list[], int *n) {
 
     if(*n > 0) {
         deleted = list[0];                                                             
-        for(i=0; i < (*n)-1; ++i) {
+        for(i=0; i < (*n)-1; ++i) { 
             list[i] = list[i+1];   
         }
         (*n)--;
@@ -181,24 +209,76 @@ Student deleteLast(Student list[], int *n) {
     return deleted;
 }
 
-int search(Student list[], int n, int id);
+int search(Student list[], int n, int id) {
+    int i;
+
+    if(n>0) {
+        for(i=0; i<n; ++i) {
+           if(list[i].studID == id) {
+               return i;
+           }
+        }
+    }
+    
+    return -1;
+}
+
+Name *getNamesPassed(Student list[], int n) {
+    Name *nameList;
+    Name temp[MAX_STUDENT];
+    int i, count;
+
+    for(i=0, count=0; i<n; ++i) {
+        if(getScoreAverage(list[i]) <= 3.0) {
+            temp[count++] = list[i].studName;
+        }
+    }
+    temp[count++] = createName("", "", "");
+
+    nameList = (Name *) malloc(sizeof(Name)*count);
+
+    if(nameList != NULL) {
+        memcpy(nameList, temp, sizeof(Name)*count);
+    }
+    
+    return nameList;    
+}
+
+void displayName(Name n) {
+    printf("%s, %s %s", n.lname, n.fname, n.mname);
+}
+
+void displayAllNames(Name *nList) {
+    int i = 0;
+    while(strcmp(nList[i].fname, "") != 0 && strcmp(nList[i].mname, "") != 0 && strcmp(nList[i].lname, "") != 0) {
+        displayName(nList[i++]);
+        printf("\n");
+    }
+}
+
+int *returnID(Student list[], int n, String lname){
+    int *id;
+    int tempId[MAX_STUDENT];
+    int i,count;
+    for(i = 0,count = 0;i<n;++i){
+        if(strcmp(list[i].studName.lname,lname)==0){
+            tempId[count++] = list[i].studID;
+        }
+    }
+    tempId[count++] = 0;
+    
+    id = (int *)malloc(sizeof(int)*count);
+    if(id != NULL){
+        memcpy(id,tempId,sizeof(int)*count);
+    }
+    return id;
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void displayID(int *n){
+    int i;
+    for(i=0,)
+}
 
 
 

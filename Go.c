@@ -11,19 +11,11 @@
 // Create a function that will display all the students in the array.
 // Create a function that will get the average score of a student.
 // Create a function that will encode the 5 scores of the student.
-Boolean insertFirst(Student list[], int *n, Student s);
-Boolean insertLast(Student list[], int *n, Student s);
-Student deleteFirst(Student list[], int *n);
-Student deleteLast(Student list[], int *n);
-int search(Student[], int n, int id);
-
 
 
 #include<stdio.h>
 #include<conio.h>
 #include<stdlib.h>
-
-
 
 typedef struct stud{
     char studID[10];
@@ -37,31 +29,106 @@ typedef struct{
     char mname;
 }Name;
 
+typedef char String[20];
+typedef int Boolean;
+
+Boolean insertFirst(Student list[], int *n, Student s);
+Boolean insertLast(Student list[], int *n, Student s);
+Student deleteFirst(Student list[], int *n);
+Student deleteLast(Student list[], int *n);
+
+int search(Student[], int n, int id);
+void displayStudent(Student s);
+void displayStudents(Student studs[], int n);
+float getScoreAverage(Student s);
+void recordScore(Student *s, float scores[], int n);
+Name createName(String fname, String mname, String lname);
+Student createStudent(int id, Name name);
+
+Student *getLastname(Student list[],int count, String lastname);
+
 int main(void)
 {
-    Student stud[5];
-    int i;
+    String lastN;
+    Student list[MAX_STUDENT];
+    String IDnum;
+    int count = 0;
+    float s1[5] = {5.0, 5.0, 5.0, 1.0, 5.0};
+    float s2[5] = {3.0, 3.0, 3.0, 3.0, 3.0};
+    float s3[5] = {1.0, 2.0, 2.0, 3.0, 3.0};
+    float s4[5] = {3.0, 3.0, 2.0, 1.0, 1.0};
+    float s5[5] = {1.0, 2.0, 1.0, 1.0, 1.0};
+    Name *passed;
 
-    
+    list[0] = createStudent(1001, createName("Kyle", "Castro", "Burce"));
+    list[1] = createStudent(1002, createName("Sugar", "Librero", "Vender"));
+    list[2] = createStudent(1003, createName("Christoph", "Gwapo", "Carreon"));
+    list[3] = createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")); 
+    list[4] = createStudent(1005, createName("Fitz", "Napulihan", "Martin")); 
+    count = 5;
 
+    recordScore(&list[0], s1, 5);
+    recordScore(&list[1], s2, 5);
+    recordScore(&list[2], s3, 5);
+    recordScore(&list[3], s4, 5);
+    recordScore(&list[4], s5, 5);
 
+    printf("\n\nDisplay All Student:\n");
+    displayStudents(list, 5);
 
+    printf("Search lastname");
+    scanf("%s",&lastN);         //Search last name
+
+    IDnum = getLastname(list,count,lastN); //Inserts lastname in the function to search
+    displayStudents(lastNlist); //display
 
     return 0;
 }
 
-void displayStudInfo(Student a)
-{   
-    printf("%s", a.studID);
-    printf("%s", a.studName.fname);
-    printf("%s", a.studName.lname);
-    printf("%s", a.studName.mname);
+Name createName(String fname, String mname, String lname) {
+    Name n;
+
+    strcpy(n.fname, fname);
+    strcpy(n.mname, mname);
+    strcpy(n.lname, lname);
+
+    return n;
 }
 
-void displayStuds()
-{
+Student createStudent(int id, Name name) {
+    Student s = {id, name, {5.0, 5.0, 5.0, 5.0, 5.0}}; 
 
+    return s;
+}
 
+void displayStudents(Student studs[], int n) {
+    int i, j;
+    printf("%10s | %30s | %s\n", "ID", "NAME", "SCORE");
+    for(i=0; i<n; i++) {
+        printf("%10d | %14s %15s | {", studs[i].studID, studs[i].studName.fname, studs[i].studName.lname); 
+        for(j=0; j<MAX_SCORE; ++j) {
+            printf("%.2f", studs[i].studScore[j]);
+            if(j < MAX_SCORE-1) {
+                printf(", ");
+            }
+        }
+        printf("}\n");
+    }
+}
+
+float getScoreAverage(Student s) {
+    float sum = 0;
+    int i;
+
+    for(i=0; i<MAX_SCORE; ++i) {
+        sum += s.studScore[i];
+    }
+
+    return sum/MAX_SCORE;
+}
+
+void recordScore(Student *s, float scores[], int n) {
+    memcpy(s->studScore, scores, sizeof(float)*n);
 }
 
 void getAvg(Student a)
@@ -140,3 +207,28 @@ Student deleteFirst(Student list[], int *n)
 }
 Student deleteLast(Student list[], int *n);
 int search(Student[], int n, int id);
+
+String getLastname(Student list[],int count,String lastname)
+{
+    int i,lastNcount=0;
+    Student tempList[MAX_STUDENT];
+    Student *newList
+    String ret = NULL;
+
+    for(i=0; i<count; i++){
+        if(strcmp(list[i].studName.lname,lastname)==0){
+            tempList[i] = list[i];
+            lastNcount++;
+            ret = tempList[i].studID;
+        }
+    }
+
+    newList = (Student *)malloc(sizeof(Student)*count);
+
+    if(newList != NULL){
+        memcpy(tempList, newList, sizeof(Student)*lastNcount);
+    }
+
+    return ret;
+
+}

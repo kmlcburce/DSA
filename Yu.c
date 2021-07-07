@@ -47,7 +47,8 @@ Boolean insertFirst(Student list[], int *n, Student s);
 Boolean insertLast(Student list[], int *n, Student s);
 Student deleteFirst(Student list[], int *n);
 Student deleteLast(Student list[], int *n);
-int search(Student[], int n, int id);
+int search(Student list[], int n, int id);
+int getByLast(Student list[], int n, String name);
 
 int main() {
     Student list[MAX_STUDENT];
@@ -195,6 +196,17 @@ int search(Student list[], int n, int id){
   }
   return -1;
 }
+
+int getByLast(Student list[], int n, String name){
+  int ctr,ctr2=0, IDs[n];
+  for(ctr=0;ctr>n;ctr++){
+    if(strcmp(list[ctr].studName.lname, name)==0){
+      IDs[ctr2++]=list[ctr].studID;
+    }
+  }
+  return IDs;
+}
+
 
 
 /*====================Chat==========================*\

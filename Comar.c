@@ -211,13 +211,12 @@ int search(Student[], int n, int id){
     }
 }
 
+/*
+   Make 5 problems
 
-
-
-
-
-
-
+    - Create a function that searches a student and replaces that student data with another student.
+    - Create a function that 
+*/
 
 
 

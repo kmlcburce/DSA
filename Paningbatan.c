@@ -13,7 +13,6 @@
 
 #include<stdio.h>
 #include<string.h>
-#include<stdbool.h>
 
 #define MAX_SCORE 5
 #define MAX_STUDENT 5
@@ -48,7 +47,7 @@ Boolean insertFirst(Student list[], int *n, Student s);
 Boolean insertLast(Student list[], int *n, Student s);
 Student deleteFirst(Student list[], int *n);
 Student deleteLast(Student list[], int *n);
-int search(Student[], int n, int id);
+int search(Student list[], int n, int id);
 
 int main() {
     Student list[MAX_STUDENT];
@@ -57,7 +56,7 @@ int main() {
 
 
     list[0] = createStudent(1001, createName("Kyle", "Castro", "Burce"));
-    list[1] = createStudent(1002, createName("Sugar", "Librero", "Vender")); 
+    list[1] = createStudent(1002, createName("Sugar", "Librero", "Vender")); //Camae mana mao na sugar
     count = 2;
     // list[2] = createStudent(1003, createName("Christoph", "Gwapo", "Carreon"));
     // list[3] = createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")); 
@@ -73,62 +72,6 @@ int main() {
     displayStudents(list, 5);
 
     return 0;
-}
-
-Boolean insertFirst(Student list[], int *n, Student s) {
-    int i;
-	
-    if(list[0].studID != 0) {
-        for(i=0; i<n; ++i) {
-            list[i] = list[i+1];
-        }
-    }else {
-        list[0] = s;
-    }
-    (*n)++;
-
-    if(MAX_STUDENT > n) {
-        return TRUE;
-    }else {
-        printf("Maximum");
-        return FALSE;
-    }
-
-}
-
-Boolean insertLast(Student list[], int *n, Student s) {
-    if(list[MAX_STUDENT-1].studID != 0) {
-        list[MAX_STUDENT-1] = deleteLast(list, &n);
-    }else {
-        list[MAX_STUDENT-1] = s;
-    }
-    (*n)++;
-
-    if(MAX_STUDENT > n){
-        return TRUE;
-    }else {
-        printf("Maximum");
-        return FALSE;
-    }
-
-}
-
-Student deleteFirst(Student list[], int *n) {
-
-    //:'(  
-
-}
-
-Student deleteLast(Student list[], int *n) {
-
-    //:'( 
-
-}
-
-int search(Student[], int n, int id) {
-
-    //:'( 
-
 }
 
 void displayStudent(Student s) {
@@ -191,3 +134,85 @@ Student createStudent(int id, Name name) {
 
     return s;
 }
+
+Boolean insertFirst(Student list[], int *n, Student s) {
+    int i;
+    if(*n < MAX_STUDENT) {
+        for(i=*n; i>0; --i) {
+            list[i] = list[i-1];
+        }
+        list[0] = s;
+        (*n)++;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+Boolean insertLast(Student list[], int *n, Student s) {
+    if(*n < MAX_STUDENT) {
+        list[(*n)++] = s;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+Student deleteFirst(Student list[], int *n) {
+    int i;
+    Student deleted = createStudent(0, createName("", "", ""));
+
+    if(*n > 0) {
+        deleted = list[0];                                                             
+        for(i=0; i < (*n)-1; ++i) { 
+            list[i] = list[i+1];   
+        }
+        (*n)--;
+    }
+
+    return deleted;
+}
+
+Student deleteLast(Student list[], int *n) {
+    Student deleted = {0, {"", "", ""}, {0, 0, 0, 0, 0}};
+
+    if(*n > 0) {
+        deleted = list[--(*n)];
+    }
+
+    return deleted;
+}
+
+int search(Student list[], int n, int id) {
+    int i;
+
+    if(n>0) {
+        for(i=0; i<n; ++i) {
+           if(list[i].studID == id) {
+               return i;
+           }
+        }
+    }
+    
+    return -1;
+}
+//* make 5 different problems based on structure abo
+
+// Create a function that will list the students' last name alphabetically (ascending)
+// Create a function that will check if the student has passed. (initialize a passing score)
+// Create a function that will display all students with 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
