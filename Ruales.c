@@ -11,6 +11,13 @@
 // Create a function that will get the average score of a student.
 // Create a function that will encode the 5 scores of the student.
 
+//create at least 5 problems based on the structures and functions
+//
+//
+//
+//
+//
+
 #include<stdio.h>
 #include<string.h>
 
@@ -181,7 +188,19 @@ Student deleteLast(Student list[], int *n) {
     return deleted;
 }
 
-int search(Student list[], int n, int id);
+int search(Student list[], int n, int id){
+    int i;
+
+    if(n>0) {
+        for(i=0; i<n; ++i) {
+           if(list[i].studID == id) {
+               return i;
+           }
+        }
+    }
+    
+    return -1;
+}
 
 
 
