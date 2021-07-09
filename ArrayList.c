@@ -55,7 +55,7 @@ int search(StudentList list, int id);
 //to be added
 Boolean insertSorted(StudentDynamicList *list, Student s); //lastname 
 StudentList searchStudent(StudentDynamicList *list, String keyword);
-// 
+
 Name *getNamesPassed(Student list[], int n);
 StudentList getStudentPassed(StudentList list); //
 // e copy nalang ninyo daan then paste sa DEVC

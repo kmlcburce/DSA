@@ -255,7 +255,7 @@ Student *getID(Student list[], int n, char lastname){
 	Student *idList;
 	Student temp[MAX_STUDENT];
 	for(i=0;i<n;i++){
-		if(strcmp(list[i].studName.lname,lastname)){
+		if(strcmp(list[i].studName.lname,lastname == 0)){
 		temp[count++] = list[i];
 		}		
 	}
@@ -265,6 +265,7 @@ Student *getID(Student list[], int n, char lastname){
 	if(idList != NULL){
 		memcpy(idList, temp, sizeof(Name)*count);
 	}
+    return idList->studID;
 }
 
 

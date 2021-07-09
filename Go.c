@@ -210,20 +210,19 @@ int search(Student[], int n, int id);
 
 String getLastname(Student list[],int count,String lastname)
 {
-    int i,lastNcount=0;
-    Student tempList[MAX_STUDENT];
+    int i,lastNcount;
+    String tempList;
     Student *newList
     String ret = NULL;
 
-    for(i=0; i<count; i++){
-        if(strcmp(list[i].studName.lname,lastname)==0){
-            tempList[i] = list[i];
-            lastNcount++;
-            ret = tempList[i].studID;
+    for(i=0,lastNcount=0; i<count; i++){
+        if(strcmp(list[i].studName.lname,lastname)==0){ //if strcmp is true
+            strcpy(tempList,list[i].studID);            //templist copies the ID
+            lastNcount++;                               //lastNcount increments
         }
     }
 
-    newList = (Student *)malloc(sizeof(Student)*count);
+    newList = (Student *)malloc(sizeof(Student)*count); //
 
     if(newList != NULL){
         memcpy(tempList, newList, sizeof(Student)*lastNcount);

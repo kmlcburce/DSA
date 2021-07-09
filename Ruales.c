@@ -1,9 +1,3 @@
-Reclusiarch
-#6765
-With blade and bolter, with faith and fire
-
-n1L — Yesterday at 6:59 PM
-hello pwede ko request pa push ani sa git? sorry na late kosend, i had some stuff to do.
 // Create a structure for student that contains the following:
 //     studID, studName, studScore
 
@@ -52,7 +46,7 @@ Student createStudent(int id, Name name);
 
 void displayName(Name n);
 void displayAllNames(Name *nList);
-void displayID(int *id,int n);
+void displayID(Student list[], int n);
 
 Boolean insertFirst(Student list[], int *n, Student s);
 Boolean insertLast(Student list[], int *n, Student s);
@@ -102,114 +96,10 @@ int main() {
 
     printf("ID number with students that has the last name Carreon:\n");
     id = returnID(list,count,"Carreon");
-    displayID(id,count);
-	free(id);
-... (191 lines left)
-Collapse
-Ruales.c
-8 KB
-﻿
-// Create a structure for student that contains the following:
-//     studID, studName, studScore
+    displayID(list,id);
 
-// The name must be a structure also of a firstname, middlname, and lastname.
-// The student scores is an array of 5 scores. ( accepts values from 1.0 to 5.0)
-
-// Create an array of 5 students.
-
-// Create a function that will display a student information.
-// Create a function that will display all the students in the array. 
-// Create a function that will get the average score of a student.
-// Create a function that will encode the 5 scores of the student.
-
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-#define MAX_SCORE 5
-#define MAX_STUDENT 5
-#define TRUE 1
-#define FALSE 0
-
-typedef char String[20];
-typedef int Boolean;
-
-typedef struct {
-    String fname;
-    String mname;
-    String lname;
-} Name;
-
-typedef struct {
-    int studID;
-    Name studName;
-    float studScore[MAX_SCORE];
-} Student;
-
-
-void displayStudent(Student s);
-void displayStudents(Student studs[], int n);
-float getScoreAverage(Student s);
-void recordScore(Student *s, float scores[], int n);
-
-Name createName(String fname, String mname, String lname);
-Student createStudent(int id, Name name);
-
-void displayName(Name n);
-void displayAllNames(Name *nList);
-void displayID(int *id,int n);
-
-Boolean insertFirst(Student list[], int *n, Student s);
-Boolean insertLast(Student list[], int *n, Student s);
-Student deleteFirst(Student list[], int *n);
-Student deleteLast(Student list[], int *n);
-int search(Student list[], int n, int id);
-
-/*  Create a function that would list all the names of the student that has passed
- *  in the course.
- */
-Name *getNamesPassed(Student list[], int n);
-
-// Create a function that would return the student id of the requested students with a particular last name
-int *returnID(Student list[], int n, String lname);
-
-int main() {
-    Student list[MAX_STUDENT];
-    int count = 0;
-    float s1[5] = {5.0, 5.0, 5.0, 1.0, 5.0};
-    float s2[5] = {3.0, 3.0, 3.0, 3.0, 3.0};
-    float s3[5] = {1.0, 2.0, 2.0, 3.0, 3.0};
-    float s4[5] = {3.0, 3.0, 2.0, 1.0, 1.0};
-    float s5[5] = {1.0, 2.0, 1.0, 1.0, 1.0};
-    Name *passed;
-    int *id;
-
-    list[0] = createStudent(1001, createName("Kyle", "Castro", "Burce"));
-    list[1] = createStudent(1002, createName("Sugar", "Librero", "Vender"));
-    list[2] = createStudent(1003, createName("Christoph", "Gwapo", "Carreon"));
-    list[3] = createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")); 
-    list[4] = createStudent(1005, createName("Fitz", "Napulihan", "Martin")); 
-    count = 5;
-
-    recordScore(&list[0], s1, 5);
-    recordScore(&list[1], s2, 5);
-    recordScore(&list[2], s3, 5);
-    recordScore(&list[3], s4, 5);
-    recordScore(&list[4], s5, 5);
-
-    printf("\n\nDisplay All Student:\n");
-    displayStudents(list, 5);
-
-    passed = getNamesPassed(list, count);
-
-    printf("Students Who Passed.\n");
-    displayAllNames(passed);
-
-    printf("ID number with students that has the last name Carreon:\n");
-    id = returnID(list,count,"Carreon");
-    displayID(id,count);
-	free(id);
     free(passed); 
+    free(id);
     return 0;
 }
 
@@ -386,9 +276,17 @@ int *returnID(Student list[], int n, String lname){
 }
 
 
-void displayID(int *id,int n){
-	int i;
-	for(i=0;i<n;i++){	
-		printf("%d",id[i]);
-	}
+void displayID(Student list[],int *n){
+    int i;
+    for(i=0;i<n;i++){
+        if(list[i].studID == n){
+            printf(list[i].studID);
+        }
+    }
 }
+
+
+
+
+
+
