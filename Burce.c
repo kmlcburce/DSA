@@ -2,284 +2,229 @@
 #include<stdlib.h>
 #include<string.h>
 
-#define MAX_SCORE 5
-#define MAX_STUDENT 5
-#define TRUE 1
-#define FALSE 0
-
-typedef char String[20];
-typedef int Boolean;
-
+#define MAX 5
+#define true 1;
+#define false 0;
 typedef struct {
-    String fname;
-    String mname;
-    String lname;
-} Name;
-
+    int numerator;
+    int denominator;
+    int wholeNum;
+}Number;
 typedef struct {
-    int studID;
-    Name studName;
-    float studScore[MAX_SCORE];
-} Student;
-
-typedef struct {
-    Student studList[MAX_STUDENT];
-    int count;
-} StudentList;
-
-typedef struct {
-    Student *studList;
+    Number *fract;
     int count;
     int max;
-} StudentDynamicList;
+}FractCollection;
 
+Number add(Number x, Number y);
+Number sub(Number x, Number y);
+Number mult(Number x, Number y);
+Number div(Number x, Number y);
+void createFraction(int numerator, int denominator);
+void fractCalMenu(Number x, Number y);
+void displayProper(Number z);
+void displayImproper()
 
-void displayStudent(Student s);
-void displayStudents(StudentList list);
-float getScoreAverage(Student s);
-void recordScore(Student *s, float scores[], int n);
-
-Name createName(String fname, String mname, String lname);
-Student createStudent(int id, Name name);
-StudentList createStudentList();
-
-void displayName(Name n);
-void displayAllNames(Name *nList);
-
-Boolean insertFirst(StudentList *list, Student s);
-Boolean insertLast(StudentList *list, Student s);
-Student deleteFirst(StudentList *list);
-Student deleteLast(StudentList *list);
-int search(StudentList list, int id);
-
-//to be added
-Boolean insertSorted(StudentDynamicList *list, Student s); //lastname
-StudentList searchStudent(StudentDynamicList *list, String keyword);
-
-Name *getNamesPassed(Student list[], int n);
-StudentList getStudentPassed(StudentList list); //
-
-int main() {
-    StudentList list = createStudentList();
-
-    float s1[5] = {5.0, 5.0, 5.0, 1.0, 5.0};
-    float s2[5] = {3.0, 3.0, 3.0, 3.0, 3.0};
-    float s3[5] = {1.0, 2.0, 2.0, 3.0, 3.0};
-    float s4[5] = {3.0, 3.0, 2.0, 1.0, 1.0};
-    float s5[5] = {1.0, 2.0, 1.0, 1.0, 1.0};
-    Name *passed;
-
-    insertFirst(&list, createStudent(1001, createName("Kyle", "Castro", "Burce")));
-    insertFirst(&list, createStudent(1002, createName("Sugar", "Librero", "Vender")));
-    insertFirst(&list, createStudent(1003, createName("Christoph", "Gwapo", "Carreon")));
-    insertFirst(&list, createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")));
-    insertFirst(&list, createStudent(1005, createName("Fitz", "Napulihan", "Martin")));
-
-    recordScore(&list.studList[0], s1, 5); //ruales
-    recordScore(&list.studList[1], s2, 5); //sugar
-    recordScore(&list.studList[2], s3, 5);
-    recordScore(&list.studList[3], s4, 5); //yu
-    recordScore(&list.studList[4], s5, 5); //Joshua
-    // recordScore(&list.studList[0], s2, 5); //paningbatan
-
-    printf("\n\nDisplay All Student:\n");
-    displayStudents(list);
-
-    return 0;
+int main(){
+    FractCollection arr;
+    initializeCollection(&arr);
+    printf("Fraction Calculator");
+    createFraction(&arr,1,2);
+    createFraction(&arr,1,4);
+    fractCalMenu(&arr);
 }
-
-void displayStudent(Student s) {
+// Helpers
+void initializeCollection(FractCollection *arr){
+    arr->count = 0;
+    arr->max = MAX;
+}
+Number checkIfProper(Number a){
+    if(a.numerator%a.denominator == 0){
+        a.numerator = 0;
+        a.denominator = 0;
+        a.wholeNum = a.numerator / a.denominator;
+    }else{
+        a.wholeNum = a.numerator / a.denominator;
+        a.numerator = a.numerator - (a.wholeNum * a.denominator);
+    }
+    return a;
+}
+// Collection Ops
+void createFraction(FractCollection *arr, int n, int d){
     int i;
-
-    printf("%20s: %d\n", "Student ID", s.studID);
-    printf("%20s: %s, %s %c.\n", "Student Name", s.studName.lname, s.studName.fname, s.studName.mname[0]);
-    printf("%20s: {", "Scores");
-    for(i=0; i<MAX_SCORE; ++i) {
-        printf("%.2f", s.studScore[i]);
-        if(i < MAX_SCORE-1) {
-            printf(", ");
+    Number fract;
+    fract.numerator = n;
+    fract.denominator = d;
+    fract.wholeNum = 0;
+    fract = checkIfProper(fract);
+    if(arr->count>=arr->max){
+        arr->max *=2;
+        arr->fract = realloc(arr->fract, sizeof(Number)*arr->max);
+        if(arr->fract == NULL){
+            printf("Error on realloc()");
         }
     }
-    printf("}");
+        insertFirst(&arr, fract);   
+    
 }
-
-void displayStudents(StudentList list) {
-    int i, j;
-    printf("%10s | %30s | %s\n", "ID", "NAME", "SCORE");
-    for(i=0; i<list.count; i++) {
-        printf("%10d | %14s %15s | {", list.studList[i].studID, list.studList[i].studName.fname, list.studList[i].studName.lname);
-        for(j=0; j<MAX_SCORE; ++j) {
-            printf("%.2f", list.studList[i].studScore[j]);
-            if(j < MAX_SCORE-1) {
-                printf(", ");
-            }
-        }
-        printf("}\n");
-    }
-}
-
-float getScoreAverage(Student s) {
-    float sum = 0;
+void insertFirst(FractCollection *arr, Number a){
     int i;
-
-    for(i=0; i<MAX_SCORE; ++i) {
-        sum += s.studScore[i];
+    if((arr->count) < (arr->max)){
+        for(i=arr->count;i>0;i--){
+            arr->fract[i] = arr->fract[i-1];
+        }
+        arr->fract[0] = a;
+        arr->count++;
+        return true;
     }
-
-    return sum/MAX_SCORE;
+    return false;
 }
-
-void recordScore(Student *s, float scores[], int n) {
-    memcpy(s->studScore, scores, sizeof(float)*n);
+// Menus
+void fractCalMenu(FractCollection *arr){
+    int choice;
+    Number z;
+    printf("\nChoose Operation Type: ");
+    printf("\n1. Add all fraction in collection\n2. Subtract all fraction in collection\n3. Multiply all fraction in collection\n4. Divide all fraction in collection");
+    printf("\n5. Find Fraction")
+    printf("\nInput Choice:");
+    scanf("%d", &choice);
+    switch(choice){
+        case 1: addAll(&arr) break;
+        case 2: sub(&arr) break;
+        case 3: mult(&arr) break;
+        case 4: div(&arr) break;
+    }
+    display(z);
+    
 }
+// Math Operations
 
-Name createName(String fname, String mname, String lname) {
-    Name n;
-
-    strcpy(n.fname, fname);
-    strcpy(n.mname, mname);
-    strcpy(n.lname, lname);
-
-    return n;
-}
-
-Student createStudent(int id, Name name) {
-    Student s = {id, name, {5.0, 5.0, 5.0, 5.0, 5.0}};
-
-    return s;
-}
-
-Boolean insertFirst(StudentList *list, Student s) {
+void addAll(FractCollection *arr){
+    FractCollection temp;
+    initializeCollection(&temp);
     int i;
-    if((list->count) < MAX_STUDENT) {
-        for(i=list->count; i>0; --i) {
-            list->studList[i] = list->studList[i-1];
+    if(arr->count == 0){
+        print("Nothing to add");
+    }else{
+        for(i=0;i<arr->count;i++){
+            temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
+            arr->count--;
         }
-        list->studList[0] = s;
-        list->count++;
-        return TRUE;
+        addAll(&temp);
     }
-    return FALSE;
+}
+Number add(Number x, Number y){
+    Number fract;
+    float sum1,sum2;
+    int lcd;
+    sum1 = (x.numerator * y.denominator) + (x.denominator * y.numerator);
+    lcd = x.denominator * y.denominator
+    if((sum1/lcd)%1 == 0){ // if it doesnt result in decimal, divide to basic form
+        fract.numerator = sum1;
+        fract.denominator = lcd;
+        fract = checkIfProper(fract); // Will return whole num
+    }else{
+        fract.numerator = (int)sum1;
+        fract.denominator = lcd;
+    }
+    return fract;
 }
 
-Boolean insertLast(StudentList *list, Student s) {
-    if(list->count < MAX_STUDENT) {
-        list->studList[list->count++] = s;
-        return TRUE;
-    }
-    return FALSE;
-}
-
-Student deleteFirst(StudentList *list) {
+void subAll(FractCollection *arr){
+    FractCollection temp;
+    initializeCollection(&temp);
     int i;
-    Student deleted = createStudent(0, createName("", "", ""));
-
-    if(list->count > 0) {
-        deleted = list->studList[0];
-        for(i=0; i < list->count-1; ++i) {
-            list->studList[i] = list->studList[i+1];
-        }
-        list->count--;
+    if(arr->count == 0){
+        print("Nothing to add");
     }
-
-    return deleted;
-}
-
-Student deleteLast(StudentList *list) {
-    Student deleted = {0, {"", "", ""}, {0, 0, 0, 0, 0}};
-
-    if(list->count > 0) {
-        deleted = list->studList[--(list->count)];
+    for(i=0;i<arr->count;i++){
+        temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
+        arr->count--;
     }
+    subAll(&temp);
 
-    return deleted;
 }
-
-int search(StudentList list, int id) {
+Number sub(Number x, Number y){
+    Number fract;
+    float sum1,sum2;
+    int lcd;
+    sum1 = (x.numerator * y.denominator) - (x.denominator * y.numerator);
+    lcd = x.denominator * y.denominator
+    if((sum1/lcd)%1 == 0){ // if it doesnt result in decimal, divide to basic form
+        fract.numerator = sum1;
+        fract.denominator = lcd;
+        fract = checkIfProper(fract); // Will return whole num
+    }else{
+        fract.numerator = (int)sum1;
+        fract.denominator = lcd;
+    }
+    return fract;
+}
+ 
+ void multAll(FractCollection *arr){
+    FractCollection temp;
+    initializeCollection(&temp);
     int i;
-
-    if(list.count>0) {
-        for(i=0; i<list.count; ++i) {
-           if(list.studList[i].studID == id) {
-               return i;
-           }
-        }
+    if(arr->count == 0){
+        print("Nothing to add");
     }
-
-    return -1;
-}
-
-void displayName(Name n) {
-    printf("%s, %s %s", n.lname, n.fname, n.mname);
-}
-
-void displayAllNames(Name *nList) {
-    int i = 0;
-    while(strcmp(nList[i].fname, "") != 0 && strcmp(nList[i].mname, "") != 0 && strcmp(nList[i].lname, "") != 0) {
-        displayName(nList[i++]);
-        printf("\n");
+    for(i=0;i<arr->count;i++){
+        temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
+        arr->count--;
     }
+    multAll(&temp);
+
 }
-
-StudentList createStudentList() {
-    StudentList list;
-
-    list.count = 0;
-
-    return list;
-}
-
-Name *getNamesPassed(Student list[], int n) {
-    Name *nameList;
-    Name temp[MAX_STUDENT];
-    int i, count;
-
-    for(i=0, count=0; i<n; ++i) {
-        if(getScoreAverage(list[i]) <= 3.0) {
-            temp[count++] = list[i].studName;
-        }
+Number mult(Number x, Number y){
+    Number fract;
+    float sum1,sum2;
+    int lcd;
+    sum1 = (x.numerator * y.numerator);
+    lcd = (x.denominator * y.denominator);
+    if((sum1/lcd)%1 == 0){ // if it doesnt result in decimal, divide to basic form
+        fract.numerator = sum1;
+        fract.denominator = lcd;
+        fract = checkIfProper(fract); // Will return whole num
+    }else{
+        fract.numerator = (int)sum1;
+        fract.denominator = lcd;
     }
-    temp[count++] = createName("", "", "");
-
-    nameList = (Name *) malloc(sizeof(Name)*count);
-
-    if(nameList != NULL) {
-        memcpy(nameList, temp, sizeof(Name)*count);
-    }
-
-    return nameList;
+    return fract;
 }
 
-StudentList getStudentPassed(StudentList list) {
-    StudentList passed = createStudentList();
+ void divAll(FractCollection *arr){
+    FractCollection temp;
+    initializeCollection(&temp);
     int i;
-
-    for(i=0; i<list.count; ++i) {
-        if(getScoreAverage(list.studList[i]) <= 3.0) {
-            passed.studList[passed.count++] = list.studList[i];
-        }
+    if(arr->count == 0){
+        print("Nothing to add");
     }
+    for(i=0;i<arr->count;i++){
+        temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
+        arr->count--;
+    }
+    divAll(&temp);
 
-    return passed;
 }
-// Added
-Boolean insertSorted(StudentDynamicList *list, Student s){
-    if(list == NULL){
-        list[0]->studList = s;
-
+Number div(Number x, Number y){
+    Number fract;
+    float sum1,sum2;
+    int lcd;
+    sum1 = (x.numerator * y.denominator);
+    lcd = (x.denominator * y.numerator);
+    if((sum1/lcd)%1 == 0){ // if it doesnt result in decimal, divide to basic form
+        fract.numerator = sum1;
+        fract.denominator = lcd;
+        fract = checkIfProper(fract); // Will return whole num
     }else{
 
     }
-
-} // Lastname
-StudentList searchStudent(StudentDynamicList *list, String keyword){
+}
+// Display
+void displayAll(FractCollection *arr){
     int i;
-    for(i=0;i<list->count;i++){
-        if(strcmp(list[i]->studList.studName.fname)== 0 ||strcmp(list[i]->studList.studName.mname)== 0 ||strcmp(list[i]->studList.studName.lname)== 0 ||){
-            return list[i]->studList;
-        }else{
-            printf("Not found");
-        }
+    printf("\nDisplaying all:");
+    for(i=0;i<arr->count;i++){
+        printf("\n[%d](%d)%20d/%d", i+1, arr->fract[i].wholeNum, arr->fract[i].numerator, arr->fract[i].denominator)
     }
-
 }

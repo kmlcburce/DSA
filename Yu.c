@@ -59,7 +59,7 @@ StudentList searchStudent(StudentDynamicList *list, String keyword);
 Name *getNamesPassed(Student list[], int n);
 StudentList getStudentPassed(StudentList list); //
 // e copy nalang ninyo daan then paste sa DEVC
-int main() {
+int main()S
     StudentList list = createStudentList();
 
     float s1[5] = {5.0, 5.0, 5.0, 1.0, 5.0};
@@ -279,17 +279,19 @@ Boolean insertSorted(StudentDynamicList *list, Student s){
     list->count++;
     return TRUE;
 } 
-StudentList searchStudent(StudentDynamicList *list, String keyword){
+StudentList searchStudent(StudentDynamicList *list, String keyword){ 
     int ctr;
+    StudentList new = createStudentList();
     for(ctr=0;ctr<list->count;ctr++){
-        if(strcmp(list->studList[ctr]->studName->lname,keyword)==0 ||strcmp(list->studList[ctr]->studName->fname,keyword)==0 || strcmp(list->studList[ctr]->studName->mname,keyword)==0){
-            return list->studList[ctr];
+        if(strstr(list->studList[ctr]->studName->lname,keyword)!=NULL){ 
+            insertLast(&new, list->studlist[ctr]); 
         }
     }
+    return new;
 }
-
-
-
+// 
+// 
+//
 /*====================Chat==========================*\
 
 /*==================================================*\

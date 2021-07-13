@@ -1,218 +1,127 @@
-// Create a structure for student that contains the following:
-//     studID, studName, studScore
-
-// The name must be a structure also of a firstname, middlname, and lastname.
-// The student scores is an array of 5 scores. ( accepts values from 1.0 to 5.0)
-
-// Create an array of 5 students.
-
-// Create a function that will display a student information.
-// Create a function that will display all the students in the array. 
-// Create a function that will get the average score of a student.
-// Create a function that will encode the 5 scores of the student.
-
 #include<stdio.h>
-#include<string.h>
-
-#define MAX_SCORE 5
-#define MAX_STUDENT 5
-#define TRUE 1
-#define FALSE 0
-
-typedef char String[20];
-typedef int Boolean;
 
 typedef struct {
-    String fname;
-    String mname;
-    String lname;
-} Name;
+    int numerator;
+    int denominator;
+    int wholeNo;
+} Frac;
 
-typedef struct {
-    int studID;
-    Name studName;
-    float studScore[MAX_SCORE];
-} Student;
+void properFrac(int numer, int denom);
+void GCD(int numer, int denom);
 
-
-void displayStudent(Student s);
-void displayStudents(Student studs[], int n);
-float getScoreAverage(Student s);
-void recordScore(Student *s, float scores[], int n);
-
-Name createName(String fname, String mname, String lname);
-Student createStudent(int id, Name name);
-
-Boolean insertFirst(Student list[], int *n, Student s);
-Boolean insertLast(Student list[], int *n, Student s);
-Student deleteFirst(Student list[], int *n);
-Student deleteLast(Student list[], int *n);
-int search(Student list[], int n, int id);
+void addition(int a, int b, int c, int d);
+void subtraction(int a, int b, int c, int d);
+void multiplication(int a, int b, int c, int d);
+void division(int a, int b, int c, int d);
 
 int main() {
-    Student list[MAX_STUDENT];
-    int count = 0;
-    float s[5] = {3.0, 3.0, 3.0, 1.0, 5.0};
+    int x1, x2, y1, y2,op;
+    char choice;
 
+    printf("Enter first value x1 and y1 (x1/y1):\n");
+    scanf("%d%d", &x1, &y1);
+    printf("Enter second value x2 and y2 (x2/y2):\n");
+    scanf("%d%d", &x2, &y2);
 
-    list[0] = createStudent(1001, createName("Kyle", "Castro", "Burce"));
-    list[1] = createStudent(1002, createName("Sugar", "Librero", "Vender")); //Camae mana mao na sugar
-    count = 2;
-    // list[2] = createStudent(1003, createName("Christoph", "Gwapo", "Carreon"));
-    // list[3] = createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")); 
-    // list[4] = createStudent(1005, createName("Fitz", "Napulihan", "Martin")); 
+    do{
+        printf("\nEnter an operator:");
+        printf("\n\t1: Addition\n\t2: Subtraction\n\t3: Multiplication\n\t4: Division");
+        printf("\nChoice: ");
+        scanf("%d", &op);
 
-
-    recordScore(&list[3], s, 5);
-
-    printf("\n\nDisplay One Student:\n");
-    displayStudent(list[1]);
-
-    printf("\n\nDisplay All Student:\n");
-    displayStudents(list, 5);
-
-    return 0;
-}
-
-void displayStudent(Student s) {
-    int i;
-
-    printf("%20s: %d\n", "Student ID", s.studID);
-    printf("%20s: %s, %s %c.\n", "Student Name", s.studName.lname, s.studName.fname, s.studName.mname[0]);
-    printf("%20s: {", "Scores");
-    for(i=0; i<MAX_SCORE; ++i) {
-        printf("%.2f", s.studScore[i]);
-        if(i < MAX_SCORE-1) {
-            printf(", ");
+        switch(op) {
+            case 1:
+                addition(x1,y1,x2,y2);
+                break;
+            case 2:
+                subtraction(x1,y1,x2,y2);
+                break;
+            case 3:
+                multiplication(x1,y1,x2,y2);
+                break;
+            case 4:
+                division(x1,y1,x2,y2);
+                break;
+            default:
+                printf("Chosen operator is not one of the choices");
         }
-    }
-    printf("}");
+
+        fflush(stdin);
+        printf("\n\nDo you want another operator? (y-yes/n-no):");
+        scanf("%c", &choice);
+    } while(choice == 'y');
 }
 
-void displayStudents(Student studs[], int n) {
-    int i, j;
-    printf("%10s | %30s | %s\n", "ID", "NAME", "SCORE");
-    for(i=0; i<n; i++) {
-        printf("%10d | %14s %15s | {", studs[i].studID, studs[i].studName.fname, studs[i].studName.lname);
-        for(j=0; j<MAX_SCORE; ++j) {
-            printf("%.2f", studs[i].studScore[j]);
-            if(j < MAX_SCORE-1) {
-                printf(", ");
-            }
-        }
-        printf("}\n");
-    }
-}
-
-float getScoreAverage(Student s) {
-    float sum = 0;
-    int i;
-
-    for(i=0; i<MAX_SCORE; ++i) {
-        sum += s.studScore[i];
-    }
-
-    return sum/MAX_SCORE;
-}
-
-void recordScore(Student *s, float scores[], int n) {
-    memcpy(s->studScore, scores, sizeof(float)*n);
-}
-
-Name createName(String fname, String mname, String lname) {
-    Name n;
-
-    strcpy(n.fname, fname);
-    strcpy(n.mname, mname);
-    strcpy(n.lname, lname);
-
-    return n;
-}
-
-Student createStudent(int id, Name name) {
-    Student s = {id, name, {5.0, 5.0, 5.0, 5.0, 5.0}}; 
-
-    return s;
-}
-
-Boolean insertFirst(Student list[], int *n, Student s) {
-    int i;
-    if(*n < MAX_STUDENT) {
-        for(i=*n; i>0; --i) {
-            list[i] = list[i-1];
-        }
-        list[0] = s;
-        (*n)++;
-        return TRUE;
-    }
-    return FALSE;
-}
-
-Boolean insertLast(Student list[], int *n, Student s) {
-    if(*n < MAX_STUDENT) {
-        list[(*n)++] = s;
-        return TRUE;
-    }
-    return FALSE;
-}
-
-Student deleteFirst(Student list[], int *n) {
-    int i;
-    Student deleted = createStudent(0, createName("", "", ""));
-
-    if(*n > 0) {
-        deleted = list[0];                                                             
-        for(i=0; i < (*n)-1; ++i) { 
-            list[i] = list[i+1];   
-        }
-        (*n)--;
-    }
-
-    return deleted;
-}
-
-Student deleteLast(Student list[], int *n) {
-    Student deleted = {0, {"", "", ""}, {0, 0, 0, 0, 0}};
-
-    if(*n > 0) {
-        deleted = list[--(*n)];
-    }
-
-    return deleted;
-}
-
-int search(Student list[], int n, int id) {
-    int i;
-
-    if(n>0) {
-        for(i=0; i<n; ++i) {
-           if(list[i].studID == id) {
-               return i;
-           }
-        }
-    }
+void GCD(int numer, int denom) {
+    int GCD;
     
-    return -1;
+    if (numer < denom) {
+        GCD = numer;
+    }else {
+        GCD = denom;
+    }
+    while (GCD > 1) {
+        if (numer % GCD == 0 && denom % GCD == 0) {
+            break;
+            GCD--;
+        }
+    }
+    printf("Result is %d/%d", numer/GCD, denom/GCD);
 }
-//* make 5 different problems based on structure abo
+void properFrac(int numer, int denom) {
+   	int wholeNo;
+    
+  	if (numer < denom) {
+       GCD(numer,denom);
+  	}else if (numer%denom == 0) {
+       wholeNo = numer/denom;
+       printf("Result is %d", wholeNo);
+   	}else {
+       wholeNo = numer/denom;
+       numer = numer%denom;
+       printf("Result is %d %d/%d", wholeNo, numer, denom);
+   	}
+}
 
-// Create a function that will list the students' last name alphabetically (ascending)
-// Create a function that will check if the student has passed. (initialize a passing score)
-// Create a function that will display all students with 
+void addition(int a, int b, int c, int d) {
+    Frac x;
+    int num1, num2;
+    
+    x.denominator = b*d;
+    num1 = x.denominator/b * a;
+    num2 = x.denominator/d * c;
+    x.numerator = num1 + num2;
 
+    properFrac(x.numerator, x.denominator);
 
+}
 
+void subtraction(int a, int b, int c, int d) {
+    Frac x;
+    int num1, num2;
+    
+    x.denominator = b*d;
+    num1 = x.denominator/b * a;
+    num2 = x.denominator/d * c;
+    x.numerator = num1 - num2;
 
+    properFrac(x.numerator, x.denominator);
+}
 
+void multiplication(int a, int b, int c, int d) {
+    Frac x;
+    
+    x.numerator = a*c;
+    x.denominator = b*d;
+    
+    properFrac(x.numerator, x.denominator);
+}
 
-
-
-
-
-
-
-
-
-
-
-
+void division(int a, int b, int c, int d) {
+    Frac x;
+    
+    x.numerator = a*d;
+    x.denominator = b*c;
+    
+    properFrac(x.numerator, x.denominator);
+}

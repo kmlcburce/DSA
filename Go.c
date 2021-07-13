@@ -231,3 +231,30 @@ String getLastname(Student list[],int count,String lastname)
     return ret;
 
 }
+
+////FRACTIONS
+
+void addition(frac1 f1, frac2 f2)
+{
+	int ad,bc,gcd,sum;
+	
+	sum = f1.numerator+f2.numerator;
+	gcd = f1.denomenator+f2.denomenator;
+	
+	if(f1.denomenator != f2.denomenator)
+	{
+		ad = f1.numerator*f2.denomenator;
+		bc = f1.denomenator *f2.numerator;
+		gcd = f1.denomenator*f2.denomenator;
+		sum = ad+bc;
+		
+		if(sum%2==0 && gcd%2==0){
+			sum = sum/2;
+			gcd = gcd/2;
+		}
+		printf("%d / %d",sum,gcd);
+	}else{
+		printf("%d / %d", sum, gcd);
+	}
+	
+}

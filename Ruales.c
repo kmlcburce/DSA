@@ -1,292 +1,170 @@
-// Create a structure for student that contains the following:
-//     studID, studName, studScore
+#include <stdio.h>
 
-// The name must be a structure also of a firstname, middlname, and lastname.
-// The student scores is an array of 5 scores. ( accepts values from 1.0 to 5.0)
+typedef char String[40];
 
-// Create an array of 5 students.
+typedef struct{
+	int num;
+	int denom;
+	int wholeNum;
+}Fraction;
 
-// Create a function that will display a student information.
-// Create a function that will display all the students in the array. 
-// Create a function that will get the average score of a student.
-// Create a function that will encode the 5 scores of the student.
+float addition(int n);
+void displayOperations();
+void addInput();
+void subInput();
+void mulInput();
+void divInput();
+void calculate(int num,int denom);
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-#define MAX_SCORE 5
-#define MAX_STUDENT 5
-#define TRUE 1
-#define FALSE 0
-
-typedef char String[20];
-typedef int Boolean;
-
-typedef struct {
-    String fname;
-    String mname;
-    String lname;
-} Name;
-
-typedef struct {
-    int studID;
-    Name studName;
-    float studScore[MAX_SCORE];
-} Student;
-
-
-void displayStudent(Student s);
-void displayStudents(Student studs[], int n);
-float getScoreAverage(Student s);
-void recordScore(Student *s, float scores[], int n);
-
-Name createName(String fname, String mname, String lname);
-Student createStudent(int id, Name name);
-
-void displayName(Name n);
-void displayAllNames(Name *nList);
-void displayID(Student list[], int n);
-
-Boolean insertFirst(Student list[], int *n, Student s);
-Boolean insertLast(Student list[], int *n, Student s);
-Student deleteFirst(Student list[], int *n);
-Student deleteLast(Student list[], int *n);
-int search(Student list[], int n, int id);
-
-/*  Create a function that would list all the names of the student that has passed
- *  in the course.
- */
-Name *getNamesPassed(Student list[], int n);
-
-// Create a function that would return the student id of the requested students with a particular last name
-int *returnID(Student list[], int n, String lname);
-
-int main() {
-    Student list[MAX_STUDENT];
-    int count = 0;
-    float s1[5] = {5.0, 5.0, 5.0, 1.0, 5.0};
-    float s2[5] = {3.0, 3.0, 3.0, 3.0, 3.0};
-    float s3[5] = {1.0, 2.0, 2.0, 3.0, 3.0};
-    float s4[5] = {3.0, 3.0, 2.0, 1.0, 1.0};
-    float s5[5] = {1.0, 2.0, 1.0, 1.0, 1.0};
-    Name *passed;
-    int *id;
-
-    list[0] = createStudent(1001, createName("Kyle", "Castro", "Burce"));
-    list[1] = createStudent(1002, createName("Sugar", "Librero", "Vender"));
-    list[2] = createStudent(1003, createName("Christoph", "Gwapo", "Carreon"));
-    list[3] = createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")); 
-    list[4] = createStudent(1005, createName("Fitz", "Napulihan", "Martin")); 
-    count = 5;
-
-    recordScore(&list[0], s1, 5);
-    recordScore(&list[1], s2, 5);
-    recordScore(&list[2], s3, 5);
-    recordScore(&list[3], s4, 5);
-    recordScore(&list[4], s5, 5);
-
-    printf("\n\nDisplay All Student:\n");
-    displayStudents(list, 5);
-
-    passed = getNamesPassed(list, count);
-
-    printf("Students Who Passed.\n");
-    displayAllNames(passed);
-
-    printf("ID number with students that has the last name Carreon:\n");
-    id = returnID(list,count,"Carreon");
-    displayID(list,id);
-
-    free(passed); 
-    free(id);
-    return 0;
+int main(){
+	Fraction f;
+    int choice;
+    displayOperations();
+    scanf("%d",&choice);
+    switch(choice){
+    	case 1:
+    	printf("%40s","ADDITION\n");
+    	addInput(f);
+    	break;
+    	
+    	case 2:
+    	printf("%40s","SUBTRACTION\n");
+    	subInput(f);
+    	break;
+    	
+    	case 3:
+    	printf("%42s","MULTIPLACTION\n");
+    	mulInput(f);
+    	break;
+    	
+    	case 4:
+    	printf("%40s","DIVISION\n");
+    	divInput(f);
+    	break;
+	}
 }
 
-void displayStudent(Student s) {
-    int i;
-
-    printf("%20s: %d\n", "Student ID", s.studID);
-    printf("%20s: %s, %s %c.\n", "Student Name", s.studName.lname, s.studName.fname, s.studName.mname[0]);
-    printf("%20s: {", "Scores");
-    for(i=0; i<MAX_SCORE; ++i) {
-        printf("%.2f", s.studScore[i]);
-        if(i < MAX_SCORE-1) {
-            printf(", ");
-        }
-    }
-    printf("}");
+void displayOperations(){
+	printf("%50s\n","Select one of the Operations");
+    printf("%40s  \n","1. Addition");
+    printf("%43s  \n","2. Subtraction");
+    printf("%46s  \n","3. Multiplication");
+    printf("%40s  \n","4. Division");
 }
 
-void displayStudents(Student studs[], int n) {
-    int i, j;
-    printf("%10s | %30s | %s\n", "ID", "NAME", "SCORE");
-    for(i=0; i<n; i++) {
-        printf("%10d | %14s %15s | {", studs[i].studID, studs[i].studName.fname, studs[i].studName.lname); 
-        for(j=0; j<MAX_SCORE; ++j) {
-            printf("%.2f", studs[i].studScore[j]);
-            if(j < MAX_SCORE-1) {
-                printf(", ");
-            }
-        }
-        printf("}\n");
-    }
-}
 
-float getScoreAverage(Student s) {
-    float sum = 0;
-    int i;
-
-    for(i=0; i<MAX_SCORE; ++i) {
-        sum += s.studScore[i];
-    }
-
-    return sum/MAX_SCORE;
-}
-
-void recordScore(Student *s, float scores[], int n) {
-    memcpy(s->studScore, scores, sizeof(float)*n);
-}
-
-Name createName(String fname, String mname, String lname) {
-    Name n;
-
-    strcpy(n.fname, fname);
-    strcpy(n.mname, mname);
-    strcpy(n.lname, lname);
-
-    return n;
-}
-
-Student createStudent(int id, Name name) {
-    Student s = {id, name, {5.0, 5.0, 5.0, 5.0, 5.0}}; 
-
-    return s;
-}
-
-Boolean insertFirst(Student list[], int *n, Student s) {
-    int i;
-    if(*n < MAX_STUDENT) {
-        for(i=*n; i>0; --i) {
-            list[i] = list[i-1];
-        }
-        list[0] = s;
-        (*n)++;
-        return TRUE;
-    }
-    return FALSE;
-}
-
-Boolean insertLast(Student list[], int *n, Student s) {
-    if(*n < MAX_STUDENT) {
-        list[(*n)++] = s;
-        return TRUE;
-    }
-    return FALSE;
-}
-
-Student deleteFirst(Student list[], int *n) {
-    int i;
-    Student deleted = createStudent(0, createName("", "", ""));
-
-    if(*n > 0) {
-        deleted = list[0];                                                             
-        for(i=0; i < (*n)-1; ++i) { 
-            list[i] = list[i+1];   
-        }
-        (*n)--;
-    }
-
-    return deleted;
-}
-
-Student deleteLast(Student list[], int *n) {
-    Student deleted = {0, {"", "", ""}, {0, 0, 0, 0, 0}};
-
-    if(*n > 0) {
-        deleted = list[--(*n)];
-    }
-
-    return deleted;
-}
-
-int search(Student list[], int n, int id) {
-    int i;
-
-    if(n>0) {
-        for(i=0; i<n; ++i) {
-           if(list[i].studID == id) {
-               return i;
-           }
-        }
-    }
+void addInput(Fraction f){
+    int a,b,c,d,r,mixnum;
     
-    return -1;
+    printf("%30s  \n","First Fraction\n");
+    printf("%30s  ","Enter the first number: ");
+    scanf("%d",&a);
+    printf("%30s  ","Enter the second number: ");
+    scanf("%d",&b);
+    printf("\n%30s  \n","Second Fraction\n");
+    printf("%30s  ","Enter the first number: ");
+    scanf("%d",&c);
+    printf("%30s  ","Enter the second number: ");
+    scanf("%d",&d);
+    if(b==d){
+    f.num = a + c;
+    f.denom = b;
+	}else{
+    f.num = a*d + b*c;
+    f.denom = b*d;
+	}
+    printf("%30s %d/%d","Result is:",f.num,f.denom);
+    if(f.num%f.denom==0){
+    	f.wholeNum = f.num/f.denom;
+    	printf("\n%20s %d","The result in whole number is:",f.wholeNum);
+	}else{
+		f.wholeNum = f.num/f.denom;
+		mixnum = f.num%f.denom;
+		if(f.wholeNum!=0){
+    	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+	}
 }
 
-Name *getNamesPassed(Student list[], int n) {
-    Name *nameList;
-    Name temp[MAX_STUDENT];
-    int i, count;
-
-    for(i=0, count=0; i<n; ++i) {
-        if(getScoreAverage(list[i]) <= 3.0) {
-            temp[count++] = list[i].studName;
-        }
-    }
-    temp[count++] = createName("", "", "");
-
-    nameList = (Name *) malloc(sizeof(Name)*count);
-
-    if(nameList != NULL) {
-        memcpy(nameList, temp, sizeof(Name)*count);
-    }
+void subInput(Fraction f){
+	
+    int a,b,c,d,r,mixnum;
     
-    return nameList;    
+    printf("%30s  \n","First Fraction\n");
+    printf("%30s  ","Enter the first number: ");
+    scanf("%d",&a);
+    printf("%30s  ","Enter the second number: ");
+    scanf("%d",&b);
+    printf("\n%30s  \n","Second Fraction\n");
+    printf("%30s  ","Enter the first number: ");
+    scanf("%d",&c);
+    printf("%30s  ","Enter the second number: ");
+    scanf("%d",&d);
+    if(b==d){
+    f.num = a - c;
+    f.denom = b;
+	}else{
+    f.num = a*d - b*c;
+    f.denom = b*d;
+	}
+    printf("%30s %d/%d","Result is:",f.num,f.denom);
+    if(f.num%f.denom==0){
+    	f.wholeNum = f.num/f.denom;
+    	mixnum = f.num%f.denom;
+    	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+	}
 }
 
-void displayName(Name n) {
-    printf("%s, %s %s", n.lname, n.fname, n.mname);
-}
-
-void displayAllNames(Name *nList) {
-    int i = 0;
-    while(strcmp(nList[i].fname, "") != 0 && strcmp(nList[i].mname, "") != 0 && strcmp(nList[i].lname, "") != 0) {
-        displayName(nList[i++]);
-        printf("\n");
-    }
-}
-
-int *returnID(Student list[], int n, String lname){
-    int *id;
-    int tempId[MAX_STUDENT];
-    int i,count;
-    for(i = 0,count = 0;i<n;++i){
-        if(strcmp(list[i].studName.lname,lname)==0){
-            tempId[count++] = list[i].studID;
-        }
-    }
-    tempId[count++] = 0;
+void mulInput(Fraction f){
+	
+    int a,b,c,d,r,mixnum;
     
-    id = (int *)malloc(sizeof(int)*count);
-    if(id != NULL){
-        memcpy(id,tempId,sizeof(int)*count);
-    }
-    return id;
+    printf("%30s  \n","First Fraction\n");
+    printf("%30s  ","Enter the first number: ");
+    scanf("%d",&a);
+    printf("%30s  ","Enter the second number: ");
+    scanf("%d",&b);
+    printf("\n%30s  \n","Second Fraction\n");
+    printf("%30s  ","Enter the first number: ");
+    scanf("%d",&c);
+    printf("%30s  ","Enter the second number: ");
+    scanf("%d",&d);
+    f.num = a*c;
+    f.denom = b*d;
+    printf("%30s %d/%d","Result is:",f.num,f.denom);
+    if(f.num%f.denom==0){
+    	f.wholeNum = f.num/f.denom;
+    	printf("\n%20s %d","The result in whole number is:",f.wholeNum);
+	}else{
+		f.wholeNum = f.num/f.denom;
+		mixnum = f.num%f.denom;
+		printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+	}
 }
 
-
-void displayID(Student list[],int *n){
-    int i;
-    for(i=0;i<n;i++){
-        if(list[i].studID == n){
-            printf(list[i].studID);
-        }
-    }
+void divInput(Fraction f){
+	
+    int a,b,c,d,r,mixnum;
+    
+    printf("%30s  \n","First Fraction\n");
+    printf("%30s  ","Enter the first number: ");
+    scanf("%d",&a);
+    printf("%30s  ","Enter the second number: ");
+    scanf("%d",&b);
+    printf("\n%30s  \n","Second Fraction\n");
+    printf("%30s  ","Enter the first number: ");
+    scanf("%d",&c);
+    printf("%30s  ","Enter the second number: ");
+    scanf("%d",&d);
+    
+    f.num = a*d;
+    f.denom = b*c;
+    printf("%30s %d/%d","Result is:",f.num,f.denom);
+    if(f.num%f.denom==0){
+    	f.wholeNum = f.num/f.denom;
+    	printf("\n%20s %d","The result in whole number is:",f.wholeNum);
+	}else{
+		f.wholeNum = f.num/f.denom;
+		mixnum = f.num%f.denom;
+		printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+	}
 }
-
-
-
-
-
-

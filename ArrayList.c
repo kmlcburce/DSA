@@ -42,6 +42,7 @@ void recordScore(Student *s, float scores[], int n);
 Name createName(String fname, String mname, String lname);
 Student createStudent(int id, Name name);
 StudentList createStudentList();
+StudentDynamicList createStudentDL(int size);
 
 void displayName(Name n);
 void displayAllNames(Name *nList);
@@ -263,9 +264,57 @@ StudentList getStudentPassed(StudentList list) {
     return passed;
 }
 
+Boolean insertSorted(StudentDynamicList *list, Student s) {
+    if(list->count >= list->max) {
+        list->max *= 2;
+        list->studList = realloc(list->studList, sizeof(Student)*list->max);
+        if(list->studList == NULL) {
+            return FALSE;
+        }
+    }
+
+    for(i=list->count; i>0 && strcmp(list->studList[i-1].studName.lname, s.studName.lname)>0; --i) {
+        list->studList[i] = list->studList[i-1];
+    }
+    list->studList[i] = s;
+    list->count++;
+
+    return TRUE;
+}
 
 
+StudentDynamicList searchStudent(StudentDynamicList *list, String keyword) {
+    StudentDynamicList result = createStudentDL(5);
+    int i;
 
+    for(i=0; i<list->count; ++i) {
+        if(strstr(list->studList[i].studName.lname, keyword)!=NULL) {
+            insertSorted(&result, list->studList[i]);
+        }
+    }
+
+    return result;
+}
+
+StudentDynamicList searchStudent(StudentDynamicList *list, String keyword) {
+    StudentDynamicList result = createStudentDL(5);
+    int i;
+
+    for(i=0; i<list->count; ++i) {
+        if(strstr(list->studList[i].studName.lname, keyword)!=NULL) {
+            if(result->count >= result->max) {
+                result->max *= 2;
+                result->studList = realloc(result->studList, sizeof(Student)*result->max);
+                if(result->studList == NULL) {
+                    break;
+                }
+            }
+            result->studList[result->count++] = list->studList[i];
+        }
+    }
+
+    return result;
+}
 
 
 
