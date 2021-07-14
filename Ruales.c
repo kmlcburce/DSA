@@ -20,6 +20,7 @@ int main(){
 	Fraction f;
     int choice;
     displayOperations();
+    printf("%35s","");
     scanf("%d",&choice);
     switch(choice){
     	case 1:
@@ -33,7 +34,7 @@ int main(){
     	break;
     	
     	case 3:
-    	printf("%42s","MULTIPLACTION\n");
+    	printf("%42s","MULTIPLICATION\n");
     	mulInput(f);
     	break;
     	
@@ -83,6 +84,7 @@ void addInput(Fraction f){
 		if(f.wholeNum!=0){
     	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
 	}
+	}
 }
 
 void subInput(Fraction f){
@@ -109,8 +111,13 @@ void subInput(Fraction f){
     printf("%30s %d/%d","Result is:",f.num,f.denom);
     if(f.num%f.denom==0){
     	f.wholeNum = f.num/f.denom;
-    	mixnum = f.num%f.denom;
+    	printf("\n%20s %d","The result in whole number is:",f.wholeNum);
+	}else{
+		f.wholeNum = f.num/f.denom;
+		mixnum = f.num%f.denom;
+		if(f.wholeNum!=0){
     	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+	}
 	}
 }
 
@@ -137,7 +144,9 @@ void mulInput(Fraction f){
 	}else{
 		f.wholeNum = f.num/f.denom;
 		mixnum = f.num%f.denom;
-		printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+		if(f.wholeNum!=0){
+    	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+	}
 	}
 }
 
@@ -165,6 +174,8 @@ void divInput(Fraction f){
 	}else{
 		f.wholeNum = f.num/f.denom;
 		mixnum = f.num%f.denom;
-		printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+		if(f.wholeNum!=0){
+    	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+	}
 	}
 }

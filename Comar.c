@@ -55,7 +55,7 @@ void show(fraction a){
 }
 
 void getGcd(int num, int dem){
-    if(b==0){
+    if(dem==0){
         return dem;
     }else{
         getGcd(dem, num%dem);

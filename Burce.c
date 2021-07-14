@@ -39,22 +39,15 @@ void initializeCollection(FractCollection *arr){
     arr->max = MAX;
 }
 Number checkIfProper(Number a){
-    if(a.numerator%a.denominator == 0){ // if wholenumber
+    if(a.numerator%a.denominator == 0){
         a.numerator = 0;
         a.denominator = 0;
         a.wholeNum = a.numerator / a.denominator;
-    }else if(a.numerator < a.denominator){// if proper fraction
-        a = simplify(a);
-    }else if(a.numerator > a.denominator){ // if improper
+    }else{
         a.wholeNum = a.numerator / a.denominator;
         a.numerator = a.numerator - (a.wholeNum * a.denominator);
     }
     return a;
-}
-Number simplify(Number x){
-    int gcd = x.denominator % x.numerator;
-    x.numerator = x.numerator / gcd;
-    x.denominator = x.denominator / gcd;
 }
 // Collection Ops
 void createFraction(FractCollection *arr, int n, int d){
@@ -97,9 +90,9 @@ void fractCalMenu(FractCollection *arr){
     scanf("%d", &choice);
     switch(choice){
         case 1: addAll(&arr) break;
-        case 2: subAll(&arr) break;
-        case 3: multAll(&arr) break;
-        case 4: divAll(&arr) break;
+        case 2: sub(&arr) break;
+        case 3: mult(&arr) break;
+        case 4: div(&arr) break;
     }
     display(z);
     
@@ -115,9 +108,9 @@ void addAll(FractCollection *arr){
     }else{
         for(i=0;i<arr->count;i++){
             temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
+            arr->count--;
         }
         addAll(&temp);
-        
     }
 }
 Number add(Number x, Number y){

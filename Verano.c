@@ -6,7 +6,6 @@
 typedef struct{
 	int numerator;
 	int denominator;
-	float answer;
 	int wholeNum;
 }fraction;
 
@@ -66,6 +65,7 @@ void calculatorMenu(){
 
 void addition(fraction a, fraction b)
 {
+    fraction c;
 	printf("Enter first numerator:\n ");
 	scanf("%d", &a.numerator);
 	printf("Enter first denominator:\n ");
@@ -77,13 +77,15 @@ void addition(fraction a, fraction b)
 	if(a.denominator == 0 || b.denominator == 0){
 		printf("Syntax Error Denominator should not be 0!!!");
 	}else{
-	a.answer = (a.numerator/a.denominator) + (b.numerator/b.denominator);
-	printf("The answer is: %.2f", a.answer);
+	c.numerator = (a.numerator*b.denominator) + (b.numerator*a.denominator);
+	c.denominator = a.denominator*b.denominator;
+	printf("The answer is: %d/%d", c.numerator, c.denominator);
 	}	
 }
 
 void subtraction(fraction a, fraction b)
 {
+    fraction c;
 	printf("Enter first numerator:\n ");
 	scanf("%d", &a.numerator);
 	printf("Enter first denominator:\n ");
@@ -95,13 +97,15 @@ void subtraction(fraction a, fraction b)
 	if(a.denominator == 0 || b.denominator == 0){
 		printf("Syntax Error Denominator should not be 0!!!");
 	}else{
-	a.answer = (a.numerator/a.denominator) + (b.numerator/b.denominator);
-	printf("The answer is: %.2f", a.answer);
+	c.numerator = (a.numerator*b.denominator) - (b.numerator*a.denominator);
+	c.denominator = a.denominator*b.denominator;
+	printf("The answer is: %d/%d", c.numerator, c.denominator);
 	}
 }
 
 void multiplication(fraction a, fraction b)
 {
+    fraction c;
 	printf("Enter first numerator:\n ");
 	scanf("%d", &a.numerator);
 	printf("Enter first denominator:\n ");
@@ -113,13 +117,15 @@ void multiplication(fraction a, fraction b)
 	if(a.denominator == 0 || b.denominator == 0){
 		printf("Syntax Error Denominator should not be 0!!!");
 	}else{
-	a.answer = (a.numerator/a.denominator) + (b.numerator/b.denominator);
-	printf("The answer is: %.2f", a.answer);
+	c.numerator = a.numerator*b.numerator;
+	c.denominator = a.denominator*b.denominator;
+	printf("The answer is: %d/%d", c.numerator, c.denominator);
 	}
 }
 
 void division(fraction a, fraction b)
 {
+    fraction c;
 	printf("Enter first numerator:\n ");
 	scanf("%d", &a.numerator);
 	printf("Enter first denominator:\n ");
@@ -131,8 +137,9 @@ void division(fraction a, fraction b)
 	if(a.denominator == 0 || b.denominator == 0){
 		printf("Syntax Error Denominator should not be 0!!!");
 	}else{
-	a.answer = (a.numerator/a.denominator) + (b.numerator/b.denominator);
-	printf("The answer is: %.2f", a.answer);
+	c.numerator = a.numerator*b.denominator;
+	c.denominator = a.denominator*b.numerator;
+	printf("The answer is: %d/%d", c.numerator, c.denominator);
 	}
 }
 
