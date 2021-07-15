@@ -127,14 +127,14 @@ int main() {
                 displayWholeFraction(w);
                 break;
             case 8: // mult all
-            rintf("Multiplying all Fractions in Collection...\n");
+            printf("Multiplying all Fractions in Collection...\n");
                 y = multiplyAllFractions(arr);
                 w = simplyFraction(y);
                 printf("\nProduct of all fraction in the collection: ");
                 displayWholeFraction(w);
                 break;
             case 9: // div all
-                rintf("Dividing all Fractions in Collection...\n");
+                printf("Dividing all Fractions in Collection...\n");
                 y = divideAllFractions(arr);
                 w = simplyFraction(y);
                 printf("\nQuotient of all fraction in the collection: ");
