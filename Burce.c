@@ -32,7 +32,7 @@ Fraction addAllFractions(FracCollection fracs);
 
 int main() {
     FracCollection arr;
-    String menu[10] = {"Add", "Subtract", "Multiply", "Divide", "Create Collection", "Add all in Collection", "Subtract all in Collection", "Multiply all in Collection", "Divide all in Collection", "EXIT"};
+    String menu[10] = {"Add", "Subtract", "Multiply", "Divide", "Create/Add to Collection", "Add all in Collection", "Subtract all in Collection", "Multiply all in Collection", "Divide all in Collection", "EXIT"};
     int i;
     int choice;
     Fraction x, y, z, w;
@@ -105,7 +105,7 @@ int main() {
                 displayWholeFraction(w);
                 break;
             case 5: // create collection
-                printf("Creating Collection...\n");
+                printf("Modifying Collection...\n");
                 x = inputFraction("Enter fraction");
                 addToCollection(&arr, x);
                 //y = inputFraction("Enter fraction 2");
@@ -114,13 +114,31 @@ int main() {
                 break;
             case 6: // add all
                 printf("Adding all Fractions in Collection...\n");
-                addAllFractions(arr);
+                y = addAllFractions(arr);
+                w = simplyFraction(y);
+                printf("\nSum of all fraction in the collection: ");
+                displayWholeFraction(w);
                 break;
             case 7: // sub all
+                printf("Subtracting all Fractions in Collection...\n");
+                y = subtractAllFractions(arr);
+                w = simplyFraction(y);
+                printf("\nDifference of all fraction in the collection: ");
+                displayWholeFraction(w);
                 break;
             case 8: // mult all
+            rintf("Multiplying all Fractions in Collection...\n");
+                y = multiplyAllFractions(arr);
+                w = simplyFraction(y);
+                printf("\nProduct of all fraction in the collection: ");
+                displayWholeFraction(w);
                 break;
             case 9: // div all
+                rintf("Dividing all Fractions in Collection...\n");
+                y = divideAllFractions(arr);
+                w = simplyFraction(y);
+                printf("\nQuotient of all fraction in the collection: ");
+                displayWholeFraction(w);
                 break;
             case 10:
                 break;
@@ -129,11 +147,6 @@ int main() {
         }
 
     } while(choice != 10);
-
-
-
-
-
     return 0;
 }
 // Init
@@ -202,7 +215,7 @@ Fraction simplyFraction(Fraction f){
         f.den = 0;
         f.num = 0;
     }else{
-        // if proper get gcd
+        // if proper, get gcd
         while (temp.num!=temp.den)
         {
             if(temp.num>temp.den){
@@ -231,6 +244,7 @@ void addToCollection(FracCollection *arr, Fraction a){
         arr->count++;
         printf("Fraction Added to Collection");
 }
+// Collection Ops
 Fraction addAllFractions(FracCollection fracs) {
     Fraction result = newFraction(0,1);
     int i;
@@ -243,6 +257,39 @@ Fraction addAllFractions(FracCollection fracs) {
 
     return result;
 }
+Fraction subtractAllFractions(FracCollection fracs) {
+    Fraction result = newFraction(0,1);
+    int i;
+    if(fracs.count == 0){
+        printf("Collection is Empty");
+    }
+    for(i=0; i<fracs.count; ++i) {
+        result = subtractFraction(result, fracs.fracs[i]);
+    }
 
+    return result;
+}
+Fraction multiplyAllFractions(FracCollection fracs) {
+    Fraction result = newFraction(0,1);
+    int i;
+    if(fracs.count == 0){
+        printf("Collection is Empty");
+    }
+    for(i=0; i<fracs.count; ++i) {
+        result = multiplyFraction(result, fracs.fracs[i]);
+    }
 
+    return result;
+}
+Fraction divideAllFractions(FracCollection fracs) {
+    Fraction result = newFraction(0,1);
+    int i;
+    if(fracs.count == 0){
+        printf("Collection is Empty");
+    }
+    for(i=0; i<fracs.count; ++i) {
+        result = divideFraction(result, fracs.fracs[i]);
+    }
 
+    return result;
+}
