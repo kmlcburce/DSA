@@ -1,230 +1,248 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
+#include <stdio.h>
+#include <stdlib.h>
 #define MAX 5
-#define true 1;
-#define false 0;
+typedef char String[100];
+
 typedef struct {
-    int numerator;
-    int denominator;
-    int wholeNum;
-}Number;
+    int whole;
+    int num;
+    int den;
+} Fraction;
+
 typedef struct {
-    Number *fract;
+    Fraction *fracs;
     int count;
     int max;
-}FractCollection;
+} FracCollection;
 
-Number add(Number x, Number y);
-Number sub(Number x, Number y);
-Number mult(Number x, Number y);
-Number div(Number x, Number y);
-void createFraction(int numerator, int denominator);
-void fractCalMenu(Number x, Number y);
-void displayProper(Number z);
-void displayImproper()
 
-int main(){
-    FractCollection arr;
-    initializeCollection(&arr);
-    printf("Fraction Calculator");
-    createFraction(&arr,1,2);
-    createFraction(&arr,1,4);
-    fractCalMenu(&arr);
-}
-// Helpers
-void initializeCollection(FractCollection *arr){
-    arr->count = 0;
-    arr->max = MAX;
-}
-Number checkIfProper(Number a){
-    if(a.numerator%a.denominator == 0){
-        a.numerator = 0;
-        a.denominator = 0;
-        a.wholeNum = a.numerator / a.denominator;
-    }else{
-        a.wholeNum = a.numerator / a.denominator;
-        a.numerator = a.numerator - (a.wholeNum * a.denominator);
-    }
-    return a;
-}
-// Collection Ops
-void createFraction(FractCollection *arr, int n, int d){
+Fraction newFraction(int num, int den);
+Fraction inputFraction(String msg);
+
+void displayFraction(Fraction f);
+
+Fraction addFraction(Fraction a, Fraction b);
+Fraction subtractFraction(Fraction a, Fraction b);
+Fraction multiplyFraction(Fraction a, Fraction b);
+Fraction divideFraction(Fraction a, Fraction b);
+
+Fraction simplyFraction(Fraction f);
+
+Fraction addAllFractions(FracCollection fracs);
+
+int main() {
+    FracCollection arr;
+    String menu[10] = {"Add", "Subtract", "Multiply", "Divide", "Create Collection", "Add all in Collection", "Subtract all in Collection", "Multiply all in Collection", "Divide all in Collection", "EXIT"};
     int i;
-    Number fract;
-    fract.numerator = n;
-    fract.denominator = d;
-    fract.wholeNum = 0;
-    fract = checkIfProper(fract);
-    if(arr->count>=arr->max){
-        arr->max *=2;
-        arr->fract = realloc(arr->fract, sizeof(Number)*arr->max);
-        if(arr->fract == NULL){
-            printf("Error on realloc()");
-        }
-    }
-        insertFirst(&arr, fract);   
-    
-}
-void insertFirst(FractCollection *arr, Number a){
-    int i;
-    if((arr->count) < (arr->max)){
-        for(i=arr->count;i>0;i--){
-            arr->fract[i] = arr->fract[i-1];
-        }
-        arr->fract[0] = a;
-        arr->count++;
-        return true;
-    }
-    return false;
-}
-// Menus
-void fractCalMenu(FractCollection *arr){
     int choice;
-    Number z;
-    printf("\nChoose Operation Type: ");
-    printf("\n1. Add all fraction in collection\n2. Subtract all fraction in collection\n3. Multiply all fraction in collection\n4. Divide all fraction in collection");
-    printf("\n5. Find Fraction")
-    printf("\nInput Choice:");
-    scanf("%d", &choice);
-    switch(choice){
-        case 1: addAll(&arr) break;
-        case 2: sub(&arr) break;
-        case 3: mult(&arr) break;
-        case 4: div(&arr) break;
-    }
-    display(z);
-    
-}
-// Math Operations
-
-void addAll(FractCollection *arr){
-    FractCollection temp;
-    initializeCollection(&temp);
-    int i;
-    if(arr->count == 0){
-        print("Nothing to add");
-    }else{
-        for(i=0;i<arr->count;i++){
-            temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
-            arr->count--;
+    Fraction x, y, z, w;
+    arr.fracs = (FracCollection*)malloc(sizeof(FracCollection)*MAX);
+    arr.count = 0;
+    arr.max = MAX;
+    do {
+        printf("\n\nFRACTION CALCULATOR\n");
+        for(i=0; i<10; ++i) {
+            printf("[%d.] %s\n", i+1, menu[i]);
         }
-        addAll(&temp);
-    }
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Adding two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = addFraction(x, y);
+                w = simplyFraction(z);
+                displayFraction(x);
+                printf(" + ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                printf(" = ");
+                displayWholeFraction(w);
+                break;
+            case 2:
+                printf("Subtracting two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = subtractFraction(x, y);
+                w = simplyFraction(z);
+                displayFraction(x);
+                printf(" - ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                printf(" = ");
+                displayWholeFraction(w);
+                break;
+            case 3:
+                printf("Multiplying two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = multiplyFraction(x, y);
+                w = simplyFraction(z);
+                displayFraction(x);
+                printf(" x ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                printf(" = ");
+                displayWholeFraction(w);
+                break;
+            case 4:
+                printf("Dividing two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = divideFraction(x, y);
+                w = simplyFraction(z);
+                displayFraction(x);
+                printf(" / ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                printf(" = ");
+                displayWholeFraction(w);
+                break;
+            case 5: // create collection
+                printf("Creating Collection...\n");
+                x = inputFraction("Enter fraction");
+                addToCollection(&arr, x);
+                //y = inputFraction("Enter fraction 2");
+                //z = divideFraction(x, y);
+                //w = simplyFraction(z);
+                break;
+            case 6: // add all
+                printf("Adding all Fractions in Collection...\n");
+                addAllFractions(arr);
+                break;
+            case 7: // sub all
+                break;
+            case 8: // mult all
+                break;
+            case 9: // div all
+                break;
+            case 10:
+                break;
+            default:
+                printf("Invalid Input");
+        }
+
+    } while(choice != 10);
+
+
+
+
+
+    return 0;
 }
-Number add(Number x, Number y){
-    Number fract;
-    float sum1,sum2;
-    int lcd;
-    sum1 = (x.numerator * y.denominator) + (x.denominator * y.numerator);
-    lcd = x.denominator * y.denominator
-    if((sum1/lcd)%1 == 0){ // if it doesnt result in decimal, divide to basic form
-        fract.numerator = sum1;
-        fract.denominator = lcd;
-        fract = checkIfProper(fract); // Will return whole num
-    }else{
-        fract.numerator = (int)sum1;
-        fract.denominator = lcd;
-    }
-    return fract;
+// Init
+Fraction newFraction(int num, int den) {
+    Fraction f = {0, num, den};
+
+    return f;
 }
 
-void subAll(FractCollection *arr){
-    FractCollection temp;
-    initializeCollection(&temp);
-    int i;
-    if(arr->count == 0){
-        print("Nothing to add");
-    }
-    for(i=0;i<arr->count;i++){
-        temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
-        arr->count--;
-    }
-    subAll(&temp);
+Fraction inputFraction(String msg) {
+    Fraction f;
 
-}
-Number sub(Number x, Number y){
-    Number fract;
-    float sum1,sum2;
-    int lcd;
-    sum1 = (x.numerator * y.denominator) - (x.denominator * y.numerator);
-    lcd = x.denominator * y.denominator
-    if((sum1/lcd)%1 == 0){ // if it doesnt result in decimal, divide to basic form
-        fract.numerator = sum1;
-        fract.denominator = lcd;
-        fract = checkIfProper(fract); // Will return whole num
-    }else{
-        fract.numerator = (int)sum1;
-        fract.denominator = lcd;
+    printf("%s: ", msg);
+    scanf("%d/%d", &f.num, &f.den);
+    if(f.den == 0){
+        printf("Denominator can't be 0!");
     }
-    return fract;
-}
- 
- void multAll(FractCollection *arr){
-    FractCollection temp;
-    initializeCollection(&temp);
-    int i;
-    if(arr->count == 0){
-        print("Nothing to add");
-    }
-    for(i=0;i<arr->count;i++){
-        temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
-        arr->count--;
-    }
-    multAll(&temp);
-
-}
-Number mult(Number x, Number y){
-    Number fract;
-    float sum1,sum2;
-    int lcd;
-    sum1 = (x.numerator * y.numerator);
-    lcd = (x.denominator * y.denominator);
-    if((sum1/lcd)%1 == 0){ // if it doesnt result in decimal, divide to basic form
-        fract.numerator = sum1;
-        fract.denominator = lcd;
-        fract = checkIfProper(fract); // Will return whole num
-    }else{
-        fract.numerator = (int)sum1;
-        fract.denominator = lcd;
-    }
-    return fract;
-}
-
- void divAll(FractCollection *arr){
-    FractCollection temp;
-    initializeCollection(&temp);
-    int i;
-    if(arr->count == 0){
-        print("Nothing to add");
-    }
-    for(i=0;i<arr->count;i++){
-        temp.fract[temp.count++] = add(arr->fract[i], arr->fract[++i]);
-        arr->count--;
-    }
-    divAll(&temp);
-
-}
-Number div(Number x, Number y){
-    Number fract;
-    float sum1,sum2;
-    int lcd;
-    sum1 = (x.numerator * y.denominator);
-    lcd = (x.denominator * y.numerator);
-    if((sum1/lcd)%1 == 0){ // if it doesnt result in decimal, divide to basic form
-        fract.numerator = sum1;
-        fract.denominator = lcd;
-        fract = checkIfProper(fract); // Will return whole num
-    }else{
-
-    }
+    return f;
 }
 // Display
-void displayAll(FractCollection *arr){
-    int i;
-    printf("\nDisplaying all:");
-    for(i=0;i<arr->count;i++){
-        printf("\n[%d](%d)%20d/%d", i+1, arr->fract[i].wholeNum, arr->fract[i].numerator, arr->fract[i].denominator)
-    }
+void displayFraction(Fraction f) {
+    printf("%d/%d", f.num, f.den);
 }
+void displayWholeFraction(Fraction f) {
+    printf("(%d)%d/%d", f.whole, f.num, f.den);
+}
+// Ops
+Fraction addFraction(Fraction a, Fraction b) {
+    Fraction result;
+
+    result.den = a.den * b.den;
+    result.num = (a.num * b.den) + (b.num * a.den);
+
+    return result;
+}
+Fraction subtractFraction(Fraction a, Fraction b){
+    Fraction result;
+
+    result.num = (a.num * b.den) - (b.num * a.den);
+    result.den = a.den * b.den;
+    return result;
+}
+Fraction multiplyFraction(Fraction a, Fraction b){
+    Fraction result;
+
+    result.num = a.num * b.num;
+    result.den = a.den * b.den;
+    return result;
+}
+Fraction divideFraction(Fraction a, Fraction b){
+    Fraction result;
+
+    result.num = a.num * b.den;
+    result.den = a.den * b.num;
+    return result;
+}
+
+Fraction simplyFraction(Fraction f){
+    Fraction temp = f;
+    if(f.num>f.den){
+        // If improper
+        f.whole = f.num / f.den;
+        f.num = f.num - (f.den * f.whole);
+    }else if(f.num/f.den == 1){
+        f.whole = f.num / f.den;
+        f.den = 0;
+        f.num = 0;
+    }else{
+        // if proper get gcd
+        while (temp.num!=temp.den)
+        {
+            if(temp.num>temp.den){
+                temp.num -= temp.den;
+            }else {
+                temp.den -= temp.num;
+            }
+        }
+        f.num = f.num / temp.num;
+        f.den = f.den / temp.num;
+        f.whole = 0;
+    }
+    return f;
+}
+// Collection
+void addToCollection(FracCollection *arr, Fraction a){
+    int i;
+    if(arr->count>= arr->max){
+        arr->max *= 2;
+        arr->fracs = realloc(arr->fracs, sizeof(Fraction)*arr->max);
+    }
+        for(i=arr->count; i>0;i--){
+            arr->fracs[i] = arr->fracs[i-1];
+        }
+        arr->fracs[0] = a;
+        arr->count++;
+        printf("Fraction Added to Collection");
+}
+Fraction addAllFractions(FracCollection fracs) {
+    Fraction result = newFraction(0,1);
+    int i;
+    if(fracs.count == 0){
+        printf("Collection is Empty");
+    }
+    for(i=0; i<fracs.count; ++i) {
+        result = addFraction(result, fracs.fracs[i]);
+    }
+
+    return result;
+}
+
+
+
