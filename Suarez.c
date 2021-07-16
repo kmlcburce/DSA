@@ -296,79 +296,239 @@
 // 	}
 // }
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-typedef struct{
-	int numerator;
-	int denomenator;
-	int wholeNum;
-}Fraction;
+typedef char String[20];
 
-typedef struct{
-	int numerAns;
-	int denomAns;
-}Answer;
+typedef struct {
+    int whole;
+    int num;
+    int den;
+} Fraction;
 
-Answer add(Fraction a, Fraction b);
-int main(){
-	Fraction a, b;
-	Answer ans;
-	char op;
-//	printf("Input numerator:");
-//	scanf("%d", &f.numerator);
-//	printf("Input denomenator:");
-//	scanf("%d", &f.denomenator);
-	printf("Choose an operator (+,-,*,/): ");
-	scanf("%c", &op);
-		
-	printf("Input first fraction:");
-	scanf("%d %d", &a.numerator, &a.denomenator);
-	printf("Input second fraction:");
-	scanf("%d %d", &b.numerator, &b.denomenator);
+typedef struct {
+    Fraction *fracs;
+    int count;
+    int max;
+} FracCollection; 
+
+Fraction newFraction(int num, int den);
+Fraction inputFraction(String msg);
+
+void displayFraction(Fraction f);
+void displaywholeNumber(Fraction f);
+
+Fraction addFraction(Fraction a, Fraction b);
+Fraction subtractFraction(Fraction a, Fraction b);
+Fraction multiplyFraction(Fraction a, Fraction b);
+Fraction divideFraction(Fraction a, Fraction b);
+
+Fraction simplyFraction(Fraction f);
+
+Fraction addAllFractions(FracCollection fracs); 
+
+int main() {
+    String menu[5] = {"Add", "Subtract", "Multiply", "Divide", "EXIT"};
+    int i;
+    int choice;
+    Fraction x, y, z, w;
+
+    do {
+        printf("\n\nFRACTION CALCULATOR\n");
+        for(i=0; i<5; ++i) {
+            printf("[%d.] %s\n", i+1, menu[i]);
+        }
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Adding two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = addFraction(x, y);
+                printf("Answer: ");
+				displayFraction(x);
+                printf(" + ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                simplyFraction(z);
+                break;
+            case 2:
+            	printf("Subtracting two fractions...\n");
+            	x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = subtractFraction(x, y);
+                printf("Answer: ");
+                displayFraction(x);
+                printf(" - ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                simplyFraction(z);
+                break;
+            case 3:
+            	printf("Multiplying two fractions...\n");
+            	x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = multiplyFraction(x, y);
+                printf("Answer: ");
+                displayFraction(x);
+                printf(" * ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                simplyFraction(z);
+                break;
+            case 4:
+            	printf("Dividing two fractions...\n");
+            	x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = divideFraction(x, y);
+                printf("Answer: ");
+                displayFraction(x);
+                printf(" / ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                simplyFraction(z);
+                break;
+            case 5:
+                break;
+            default:
+                printf("Invalid Input");
+        }
+
+    } while(choice != 5);
+
+    return 0;
+}
+
+Fraction newFraction(int num, int den) {
+    Fraction f = {0, num, den};
+
+    return f;
+} 
+
+Fraction inputFraction(String msg) {
+    Fraction f;
+
+    printf("%s: ", msg);
+    scanf("%d/%d", &f.num, &f.den);
+
+    return f;
+}
+
+void displayFraction(Fraction f) {
+    printf("%d/%d", f.num, f.den);
+}
+
+//void displaywholeNumber(Fraction f){
+//	printf(" = %d", f.whole);
+//}
+
+Fraction addFraction(Fraction a, Fraction b) {
+    Fraction result;
 	
-	switch(op){
-		case '+':
-			add(a, b);
-			printf("Answer: %d/%d", ans.numerAns, ans.denomAns);
-			break;
-//		case '-':
-//			sub();
-//			break;
-//		case '*':
-//			mult();
-//			break;
-//		case '/':
-//			div();
-//			break;
+	result.num = (a.num * b.den) + (b.num * a.den);
+    result.den = a.den * b.den;
+    return result;
+}
+
+Fraction subtractFraction(Fraction a, Fraction b){
+	Fraction result;
+	
+	result.num = (a.num * b.den) - (b.num * a.den);
+	result.den = a.den * b.den;
+	return result;
+}
+Fraction multiplyFraction(Fraction a, Fraction b){
+	Fraction result;
+	
+	result.num = a.num * b.num;
+	result.den = a.den * b.den;
+	return result;
+}
+Fraction divideFraction(Fraction a, Fraction b){
+	Fraction result;
+	
+	result.num = a.num * b.den;
+	result.den = a.den * b.num;
+	return result;
+}	
+
+Fraction simplyFraction(Fraction f){
+	int i;
+	if(f.num < 0 || f.den < 0 ){//Checks if fraction is negative
+		f.num = abs(f.num);
+		f.den = abs(f.den);
+		if(f.num == f.den){ //if both numerator and denomenator are the same
+			f.whole = (f.num / f.den) * -1;
+			printf(" = %d", f.whole);
+		} else if(f.num == 0){ // if numerator is 0 the answer is 0
+			printf(" = %d", f.num);	
+		} else if(f.den == 0){ // if denomenator is 0 the answer is undefined
+			printf(" or undifined");	
+		} else if(f.num > f.den && f.num % f.den == 0){ // if fraction is improper and numerator is divisible by the denomenator
+			f.whole = (f.num / f.den) * -1;
+			printf(" = %d", f.whole);
+		} else if(f.num > f.den){ // if fraction is improper get gcd to simplify
+			for(i=1; i<=f.num && i<=f.den; ++i){
+				if(f.num%i==0 && f.den%i==0){ // checking for gcd
+					f.num /= i * -1;
+					f.den /= i * -1;
+				}
+			}
+			printf(" = %d/%d", f.num, f.den);
+			if(f.num > f.den){ // if fraction is still improper
+				f.whole = (f.num / f.den);
+				f.num %= f.den * -1;
+				printf(" = %d %d/%d", f.whole, f.num, f.den );
+			} 
+		} 
+	}else if(f.num == f.den){ //if both numerator and denomenator are the same
+		f.whole = f.num / f.den;
+		printf(" = %d", f.whole);
+	} else if(f.num == 0){ // if numerator is 0 the answer is 0
+		printf(" = %d", f.num);	
+	} else if(f.den == 0){ // if denomenator is 0 the answer is undefined
+		printf(" or undifined");
+	} else if(f.num > f.den && f.num % f.den == 0){ // if fraction is improper and numerator is divisible by the denomenator
+		f.whole = f.num / f.den;
+		printf(" = %d", f.whole);
+	} else if(f.num > f.den){ // if fraction is improper get gcd to simplify
+		for(i=1; i<=f.num && i<=f.den; ++i){
+			if(f.num%i==0 && f.den%i==0){ // checking for gcd
+				f.num /= i;
+				f.den /= i;
+			}
+		}
+		printf(" = %d/%d", f.num, f.den);
+		if(f.num > f.den){ // if fraction is still improper
+			f.whole = f.num / f.den;
+			f.num %= f.den;
+		printf(" = %d %d/%d", f.whole, f.num, f.den );
+		} 
 	}
+	
+//	for(i=1; i<=f.num && i<=f.den; ++i){
+//		if(f.num%i==0 && f.den%i==0){ // checking for gcd
+//			f.num /= i;
+//			f.den /= i;
+//		}
+//	}
+//	printf(" = %d %d/%d", f.whole, f.num, f.den);	
+	return f;
 }
 
-Answer add(Fraction a, Fraction b){
-	Answer ans;
-	ans.numerAns = (a.numerator * b.denomenator) + (a.denomenator * b.numerator);
-	ans.denomAns = a.denomenator * b.denomenator;
-	return ans;
-}
+Fraction addAllFractions(FracCollection f) {
+    Fraction result = newFraction(0,1);
+    int i;
 
-Answer sub(Fraction a, Fraction b){
-	Answer ans;
-	ans.numerAns = (a.numerator * b.denomenator) - (a.denomenator * b.numerator);
-	ans.denomAns = a.denomenator * b.denomenator;
-	return ans;
-}
-
-Answer mult(Fraction a, Fraction b){
-	Answer ans;
-	ans.numerAns = a.numerator * b.numerator;
-	ans.denomAns = a.denomenator * b.denomenator;
-	return ans; 
-}
-
-Answer div(Fraction a, Fraction b){
-	Answer ans;
-	ans.numerAns = a.numerator * b.denomenator;
-	ans.denomAns = a.denomenator * b.numerator;
-	return ans;
+    for(i=0; i<f.count; ++i) {
+        result = addFraction(result, f.fracs[i]); 
+    }
+    return result;
 }

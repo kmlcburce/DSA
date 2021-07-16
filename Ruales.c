@@ -1,181 +1,229 @@
 #include <stdio.h>
 
-typedef char String[40];
+typedef char String[20];
 
-typedef struct{
-	int num;
-	int denom;
-	int wholeNum;
-}Fraction;
+typedef struct {
+    int whole;
+    int num;
+    int den;
+} Fraction;
 
-float addition(int n);
-void displayOperations();
-void addInput();
-void subInput();
-void mulInput();
-void divInput();
-void calculate(int num,int denom);
+typedef struct {
+    Fraction *fracs;
+    int count;
+    int max;
+} FracCollection; 
 
-int main(){
-	Fraction f;
+Fraction newFraction(int num, int den);
+Fraction inputFraction(String msg);
+
+//display
+void displayFraction(Fraction f);
+void displaySimplified(Fraction f);
+
+Fraction addFraction(Fraction a, Fraction b);
+Fraction subtractFraction(Fraction a, Fraction b);
+Fraction multiplyFraction(Fraction a, Fraction b);
+Fraction divideFraction(Fraction a, Fraction b);
+
+Fraction simplyFraction(Fraction a);
+
+Fraction addAllFractions(FracCollection fracs); 
+
+int main() {
+    String menu[5] = {"Add", "Subtract", "Multiply", "Divide", "EXIT"};
+    int i;
     int choice;
-    displayOperations();
-    printf("%35s","");
-    scanf("%d",&choice);
-    switch(choice){
-    	case 1:
-    	printf("%40s","ADDITION\n");
-    	addInput(f);
-    	break;
-    	
-    	case 2:
-    	printf("%40s","SUBTRACTION\n");
-    	subInput(f);
-    	break;
-    	
-    	case 3:
-    	printf("%42s","MULTIPLICATION\n");
-    	mulInput(f);
-    	break;
-    	
-    	case 4:
-    	printf("%40s","DIVISION\n");
-    	divInput(f);
-    	break;
-	}
+    Fraction x, y, z, w; 
+
+    do {
+        printf("\n\nFRACTION CALCULATOR\n");
+        for(i=0; i<5; ++i) {
+            printf("[%d.] %s\n", i+1, menu[i]);
+        }
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Adding two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                printf(" + \n");
+                y = inputFraction("Enter fraction 2");
+                z = addFraction(x, y);
+                w = simplyFraction(z);
+                printf("\nInitial Fraction Result:");
+                displayFraction(z);
+                if(z.num<z.den){
+                	printf("The Fraction is already in proper form");
+				}else{
+					displaySimplified(w);
+				}
+                break;
+            case 2:
+            	printf("Subtracting two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                printf(" - \n");
+                y = inputFraction("Enter fraction 2");
+                z = subtractFraction(x, y);
+                w = simplyFraction(z);
+                printf("\nInitial Fraction Result:");
+                displayFraction(z);
+                if(z.num<z.den){
+                	printf("The Fraction is already in proper form");
+				}else{
+					displaySimplified(w);
+				}
+                break;
+            case 3:
+            	printf("Multiplying two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                printf(" * \n");
+                y = inputFraction("Enter fraction 2");
+                z = multiplyFraction(x, y);
+                w = simplyFraction(z);
+                printf("\nInitial Fraction Result:");
+                displayFraction(z);
+                if(z.num<z.den){
+                	printf("The Fraction is already in proper form");
+				}else{
+					displaySimplified(w);
+				}
+                break;
+            case 4:
+            	printf("Dividing two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                printf(" / \n");
+                y = inputFraction("Enter fraction 2");
+                z = divideFraction(x, y);
+                w = simplyFraction(z);
+                printf("\nInitial Fraction Result:");
+                displayFraction(z);
+                if(z.num<z.den){
+                	printf("The Fraction is already in proper form");
+				}else{
+					displaySimplified(w);
+				}// wala sad niya gi display ang simplifyFraction
+                break;
+            case 5:
+                break;
+            default:
+                printf("Invalid Input");
+        }
+
+    } while(choice != 5);
+
+    return 0;
 }
 
-void displayOperations(){
-	printf("%50s\n","Select one of the Operations");
-    printf("%40s  \n","1. Addition");
-    printf("%43s  \n","2. Subtraction");
-    printf("%46s  \n","3. Multiplication");
-    printf("%40s  \n","4. Division");
+Fraction newFraction(int num, int den) {
+    Fraction f = {0, num, den};
+
+    return f;
+} 
+
+Fraction inputFraction(String msg) {
+    Fraction f;
+
+    printf("%s: ", msg);
+    scanf("%d/%d", &f.num, &f.den);
+
+    return f;
 }
 
-
-void addInput(Fraction f){
-    int a,b,c,d,r,mixnum;
-    
-    printf("%30s  \n","First Fraction\n");
-    printf("%30s  ","Enter the first number: ");
-    scanf("%d",&a);
-    printf("%30s  ","Enter the second number: ");
-    scanf("%d",&b);
-    printf("\n%30s  \n","Second Fraction\n");
-    printf("%30s  ","Enter the first number: ");
-    scanf("%d",&c);
-    printf("%30s  ","Enter the second number: ");
-    scanf("%d",&d);
-    if(b==d){
-    f.num = a + c;
-    f.denom = b;
+void displayFraction(Fraction f){
+	if(f.num==0){
+		f.whole = 0;
+		printf("%d\n",f.whole);
 	}else{
-    f.num = a*d + b*c;
-    f.denom = b*d;
-	}
-    printf("%30s %d/%d","Result is:",f.num,f.denom);
-    if(f.num%f.denom==0){
-    	f.wholeNum = f.num/f.denom;
-    	printf("\n%20s %d","The result in whole number is:",f.wholeNum);
-	}else{
-		f.wholeNum = f.num/f.denom;
-		mixnum = f.num%f.denom;
-		if(f.wholeNum!=0){
-    	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
-	}
+		printf("%d/%d\n",f.num, f.den);
 	}
 }
 
-void subInput(Fraction f){
+void displaySimplified(Fraction f){
 	
-    int a,b,c,d,r,mixnum;
-    
-    printf("%30s  \n","First Fraction\n");
-    printf("%30s  ","Enter the first number: ");
-    scanf("%d",&a);
-    printf("%30s  ","Enter the second number: ");
-    scanf("%d",&b);
-    printf("\n%30s  \n","Second Fraction\n");
-    printf("%30s  ","Enter the first number: ");
-    scanf("%d",&c);
-    printf("%30s  ","Enter the second number: ");
-    scanf("%d",&d);
-    if(b==d){
-    f.num = a - c;
-    f.denom = b;
-	}else{
-    f.num = a*d - b*c;
-    f.denom = b*d;
-	}
-    printf("%30s %d/%d","Result is:",f.num,f.denom);
-    if(f.num%f.denom==0){
-    	f.wholeNum = f.num/f.denom;
-    	printf("\n%20s %d","The result in whole number is:",f.wholeNum);
-	}else{
-		f.wholeNum = f.num/f.denom;
-		mixnum = f.num%f.denom;
-		if(f.wholeNum!=0){
-    	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
-	}
+	printf("\nThe simplified fraction is:");
+	if(f.num%f.den==0){
+		//displays whole number
+		f.whole = f.num/f.den;
+		printf("%d",f.whole);
+	}else if(f.num!=0 || f.num>f.den || f.num%f.den!=0){
+		//displays improper/mixed fraction
+		printf("%d %d/%d",f.whole,f.num,f.den);
 	}
 }
 
-void mulInput(Fraction f){
-	
-    int a,b,c,d,r,mixnum;
+
+Fraction addFraction(Fraction a, Fraction b) {
+    Fraction result;
     
-    printf("%30s  \n","First Fraction\n");
-    printf("%30s  ","Enter the first number: ");
-    scanf("%d",&a);
-    printf("%30s  ","Enter the second number: ");
-    scanf("%d",&b);
-    printf("\n%30s  \n","Second Fraction\n");
-    printf("%30s  ","Enter the first number: ");
-    scanf("%d",&c);
-    printf("%30s  ","Enter the second number: ");
-    scanf("%d",&d);
-    f.num = a*c;
-    f.denom = b*d;
-    printf("%30s %d/%d","Result is:",f.num,f.denom);
-    if(f.num%f.denom==0){
-    	f.wholeNum = f.num/f.denom;
-    	printf("\n%20s %d","The result in whole number is:",f.wholeNum);
+    if(a.den==b.den){
+    	result.num = a.num + b.num;
+    	result.den = b.den;
 	}else{
-		f.wholeNum = f.num/f.denom;
-		mixnum = f.num%f.denom;
-		if(f.wholeNum!=0){
-    	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+    	result.num = (a.num * b.den) + (b.num * a.den); 
+    	result.den = a.den * b.den;
 	}
-	}
+    
+    return result;
 }
 
-void divInput(Fraction f){
-	
-    int a,b,c,d,r,mixnum;
-    
-    printf("%30s  \n","First Fraction\n");
-    printf("%30s  ","Enter the first number: ");
-    scanf("%d",&a);
-    printf("%30s  ","Enter the second number: ");
-    scanf("%d",&b);
-    printf("\n%30s  \n","Second Fraction\n");
-    printf("%30s  ","Enter the first number: ");
-    scanf("%d",&c);
-    printf("%30s  ","Enter the second number: ");
-    scanf("%d",&d);
-    
-    f.num = a*d;
-    f.denom = b*c;
-    printf("%30s %d/%d","Result is:",f.num,f.denom);
-    if(f.num%f.denom==0){
-    	f.wholeNum = f.num/f.denom;
-    	printf("\n%20s %d","The result in whole number is:",f.wholeNum);
+
+Fraction subtractFraction(Fraction a, Fraction b) {
+    Fraction result;
+    if(a.den==b.den){
+    	result.num = a.num - b.num;
+    	result.den = b.den;
 	}else{
-		f.wholeNum = f.num/f.denom;
-		mixnum = f.num%f.denom;
-		if(f.wholeNum!=0){
-    	printf("\n%30s %d %d/%d","The result in mixed number is:",f.wholeNum,mixnum,f.denom);
+    	result.num = (a.num * b.den) - (b.num * a.den); 
+    	result.den = a.den * b.den;
 	}
-	}
+    
+    return result;
 }
+ Fraction multiplyFraction(Fraction a, Fraction b){
+ 	Fraction result;
+
+    result.num = a.num * b.num;
+    result.den = a.den * b.den;
+    
+    return result;
+ }
+
+ Fraction divideFraction(Fraction a, Fraction b){
+ 	Fraction result;
+
+    result.num = a.num * b.den;
+    result.den = a.den * b.num;
+    
+    return result;
+ }
+
+Fraction simplyFraction(Fraction a){
+	Fraction ret;
+	if(a.num%a.den==0){
+		ret.whole = a.num/a.den; 
+	}else{
+		ret.whole = a.num/a.den;
+		ret.num = a.num%a.den;
+		ret.den = a.den;
+	}	
+	return ret;	
+}
+
+Fraction addAllFractions(FracCollection f) {
+    Fraction result = newFraction(0,1);
+    int i;
+
+    for(i=0; i<f.count; ++i) {
+        result = addFraction(result, f.fracs[i]); 
+    }
+
+    return result;
+}
+
+
+
+
+
+

@@ -14,7 +14,6 @@ typedef struct {
     int max;
 } FracCollection; 
 
-
 Fraction newFraction(int num, int den);
 Fraction inputFraction(String msg);
 
@@ -25,9 +24,11 @@ Fraction subtractFraction(Fraction a, Fraction b);
 Fraction multiplyFraction(Fraction a, Fraction b);
 Fraction divideFraction(Fraction a, Fraction b);
 
-Fraction simplyFraction(Fraction f);
+Fraction simplifyFraction(Fraction f);
 
 Fraction addAllFractions(FracCollection fracs); 
+
+Fraction convertIMFraction(Fraction f);
 
 int main() {
     String menu[5] = {"Add", "Subtract", "Multiply", "Divide", "EXIT"};
@@ -49,14 +50,16 @@ int main() {
                 x = inputFraction("Enter fraction 1");
                 y = inputFraction("Enter fraction 2");
                 z = addFraction(x, y);
-                // w = simplyFraction(z);
+                w = simplifyFraction(z);
                 displayFraction(x);
                 printf(" + ");
                 displayFraction(y);
                 printf(" = ");
                 displayFraction(z);
-                // printf(" = ");
-                // displayFraction(w);
+                printf(" = ");
+                displayFraction(w);
+                printf(" = ");
+                displayFraction(convertIMFraction(w)); 
                 break;
             case 2:
                 break;
@@ -95,6 +98,10 @@ Fraction inputFraction(String msg) {
 }
 
 void displayFraction(Fraction f) {
+    if(f.whole != 0) {
+        printf("%d ", f.whole);
+    }
+    
     printf("%d/%d", f.num, f.den);
 }
 
@@ -112,18 +119,88 @@ Fraction addFraction(Fraction a, Fraction b) {
 // Fraction multiplyFraction(Fraction a, Fraction b);
 // Fraction divideFraction(Fraction a, Fraction b);
 
-// Fraction simplyFraction(Fraction f);
+Fraction simplifyFraction(Fraction f) {
+    int common = gcd(f.num, f.den);
 
-Fraction addAllFractions(FracCollection fracs) {
+    f.num /= common;
+    f.den /= common; 
+
+    return f;
+}
+
+int gcd(int a, int b){
+    int hcf;
+    for(int i=1; i<=a && i<=b; i++) {
+        if(a%i==0 && b%i==0) {
+            hcf = i;
+        }
+    }
+    return hcf;
+}
+
+Fraction addAllFractions(FracCollection f) {
     Fraction result = newFraction(0,1);
     int i;
 
-    for(i=0; i<fracs.count; ++i) {
-        result = addFraction(result, fracs.fracs[i]); 
+    for(i=0; i<f.count; ++i) {
+        result = addFraction(result, f.fracs[i]); 
     }
 
     return result;
 }
 
+Fraction convertIMFraction(Fraction f) {
+    if(f.whole == 0) {
+        if(f.num > f.den)  {
+            f.whole = f.num / f.den;
+            f.num = f.num % f.den;
+        }
+    } else {
+        f.num = f.whole * f.den + f.num;
+        f.whole = 0;
+    }
+}
 
 
+
+typedef struct {
+    Fraction *fracs;
+    int count;
+    int max;
+} FracCollection; 
+
+FracCollection *f = (Fraction)malloc(sizeof(Fraction)*max);
+
+FracCollection *f = (FracCollection *) malloc(sizeof(FracCollection) * max);
+
+int x;
+x = 5;
+
+int *p = &x;
+
+int a[5]; --> static arrays
+int *a;   --> dynamic arrays using pointers
+int *a = (int *) malloc(sizeof(int) * max); // MAX == 5
+int *a = (int *) malloc(20);
+
+FracCollection f;
+
+f.max = MAX;
+f.fracs = (Fraction *) malloc(sizeof(Fraction) * f.max);
+
+
+
+char names[20];
+
+gets(names); // hello
+
+h = 0
+e = 1
+l = 2
+l = 3
+o = 4
+\0 = 5
+
+for(i=0; names[i] != '\0'; ++i) {
+
+}

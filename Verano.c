@@ -1,164 +1,206 @@
-#include<stdio.h>
-#include<conio.h>
-#include<stdlib.h>
+#include <stdio.h>
+
+typedef char String[20];
+
+typedef struct {
+    int whole;
+    int num;
+    int den;
+} Fraction;
+
+typedef struct {
+    Fraction *fracs;
+    int count;
+    int max;
+} FracCollection;
+
+Fraction newFraction(int num, int den);
+Fraction inputFraction(String msg);
+
+void displayFraction(Fraction f);
+
+Fraction addFraction(Fraction a, Fraction b);
+Fraction subtractFraction(Fraction a, Fraction b);
+Fraction multiplyFraction(Fraction a, Fraction b);
+Fraction divideFraction(Fraction a, Fraction b);
+
+Fraction simplyFraction(Fraction f);
+int fracGCD(Fraction a, Fraction b);
+Fraction addAllFractions(FracCollection fracs); 
+
+int main() {
+    String menu[5] = {"Add", "Subtract", "Multiply", "Divide", "EXIT"};
+    int i;
+    int choice;
+    Fraction x, y, z, w;
+
+    do {
+        printf("\n\nFRACTION CALCULATOR\n");
+        for(i=0; i<5; ++i) {
+            printf("[%d.] %s\n", i+1, menu[i]);
+        }
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Adding two fractions...\n");
+                x = inputFraction("Enter fraction 1: ");
+                y = inputFraction("Enter fraction 2: ");
+                z = addFraction(x, y);
+               	// w = simplify(z);
+                displayFraction(x);
+                printf(" + ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                // printf(" = ");
+                // displayFraction(w);
+                break;
+            case 2:
+            	printf("Subtracting two fractions..\n");
+            	x = inputFraction("Enter fraction 1: ");
+            	y = inputFraction("Enter fraction 2: ");
+            	z = subtractFraction(x, y);
+            	displayFraction(x);
+            	printf("-");
+            	displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                break;
+            case 3:
+            	printf("Multiplying two fractions..\n");
+            	x = inputFraction("Enter fraction 1: ");
+            	y = inputFraction("Enter fraction 2: ");
+            	z = multiplyFraction(x, y);
+            	displayFraction(x);
+            	printf("x");
+            	displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                break;
+            case 4:
+            	printf("Dividing two fractions..\n");
+            	x = inputFraction("Enter fraction 1: ");
+            	y = inputFraction("Enter fraction 2: ");
+            	z = divideFraction(x, y);
+            	displayFraction(x);
+            	printf("/");
+            	displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                break;
+            case 5:
+            	printf("Thank you!!!");
+                break;
+            default:
+                printf("Invalid Input");
+        }
+
+    } while(choice != 5);
+
+    
+    
 
 
-typedef struct{
-	int numerator;
-	int denominator;
-	int wholeNum;
-}fraction;
+    return 0;
+}
 
-void calculatorMenu();
-void addition(fraction a, fraction b);
-void subtraction(fraction a, fraction b);
-void multiplication(fraction a, fraction b);
-void division(fraction a, fraction b);
-void convertImproper(fraction a);
+Fraction newFraction(int num, int den) {
+    Fraction f = {0, num, den};
 
-int main()
+    return f;
+} 
+
+Fraction inputFraction(String msg) {
+    Fraction f;
+
+    printf("%s: ", msg);
+    scanf("%d/%d", &f.num, &f.den);
+
+    return f;
+}
+
+void displayFraction(Fraction f) {
+    printf("%d/%d", f.num, f.den);
+}
+
+Fraction addFraction(Fraction a, Fraction b) {
+    Fraction result;
+
+    result.den = a.den * b.den;
+    result.num = (a.num * b.den) + (b.num * a.den); 
+    
+    return result;
+}
+
+Fraction subtractFraction(Fraction a, Fraction b) {
+    Fraction result;
+
+    result.num = (a.num * b.den) - (b.num * a.num);
+    result.den = a.den*b.den; 
+    
+    return result;
+}
+
+Fraction multiplyFraction(Fraction a, Fraction b)
 {
-	calculatorMenu();
+	Fraction result;
+
+    result.num = a.num*b.num;
+    result.den = a.den*b.den; 
+    
+    return result;
+}
+
+Fraction divideFraction(Fraction a, Fraction b)
+{
+	Fraction result;
+
+    result.num = a.num*b.den;
+    result.den = a.den*b.num; 
+    
+    return result;
+}
+
+Fraction simplify(Fraction a, Fraction b)
+{
+	Fraction ret;
+	int temp = fracGCD(a, b); // ????
+	ret.num = ret.num/temp; // ???
+	ret.den = ret.den/temp; // ???
 	
-	
-	return 0;	
+	return ret;	
 }
 
-void calculatorMenu(){
-	char operation;
-	fraction x,y;
-	printf("-OPERATION MENU-\n A.) Addition\n B.) Subtraction\n C.) Multiplication\n D.) Division\n E.) ConvertImproper\n");
-	printf("Enter Operation: ");
-	scanf("%c", &operation);
-	printf("---------------------\n\n");
-	switch(operation){
-		case 'A':
-		case 'a':	
-			printf("--Addition--\n\n");
-			addition(x,y);
-			break;
-		case 'B':
-		case 'b':
-			printf("--Subtraction--\n\n");	
-			subtraction(x,y);
-			break;
-		case 'C':
-		case 'c':	
-			printf("--Multiplication--\n\n");
-			multiplication(x,y);
-			break;		
-		case 'D':
-		case 'd':	
-			printf("--Division--\n\n");
-			division(x,y);
-			break;
-		case 'E':
-		case 'e':
-			printf("--Convert Improper Fraction--\n\n");
-			convertImproper(x);
-			break;	
-			
-	}
-	
-
-}
-
-void addition(fraction a, fraction b)
+int fracGCD(Fraction a, Fraction b)
 {
-    fraction c;
-	printf("Enter first numerator:\n ");
-	scanf("%d", &a.numerator);
-	printf("Enter first denominator:\n ");
-	scanf("%d", &a.denominator);
-	printf("Enter second numerator:\n ");
-	scanf("%d", &b.numerator);
-	printf("Enter second denominator:\n ");
-	scanf("%d", &b.denominator);
-	if(a.denominator == 0 || b.denominator == 0){
-		printf("Syntax Error Denominator should not be 0!!!");
-	}else{
-	c.numerator = (a.numerator*b.denominator) + (b.numerator*a.denominator);
-	c.denominator = a.denominator*b.denominator;
-	printf("The answer is: %d/%d", c.numerator, c.denominator);
-	}	
-}
-
-void subtraction(fraction a, fraction b)
-{
-    fraction c;
-	printf("Enter first numerator:\n ");
-	scanf("%d", &a.numerator);
-	printf("Enter first denominator:\n ");
-	scanf("%d", &a.denominator);
-	printf("Enter second numerator:\n ");
-	scanf("%d", &b.numerator);
-	printf("Enter second denominator:\n ");
-	scanf("%d", &b.denominator);
-	if(a.denominator == 0 || b.denominator == 0){
-		printf("Syntax Error Denominator should not be 0!!!");
-	}else{
-	c.numerator = (a.numerator*b.denominator) - (b.numerator*a.denominator);
-	c.denominator = a.denominator*b.denominator;
-	printf("The answer is: %d/%d", c.numerator, c.denominator);
+	int gcd,i;
+	for(i=1;i<=a.den&&i<=b.den;i++){
+		if(a.den%i==0&&b.den%i){
+			gcd=i;
+		}
+		return gcd;
 	}
 }
+//murag kuan na swa ang numerator og denom kuhaon ang gcd
 
-void multiplication(fraction a, fraction b)
-{
-    fraction c;
-	printf("Enter first numerator:\n ");
-	scanf("%d", &a.numerator);
-	printf("Enter first denominator:\n ");
-	scanf("%d", &a.denominator);
-	printf("Enter second numerator:\n ");
-	scanf("%d", &b.numerator);
-	printf("Enter second denominator:\n ");
-	scanf("%d", &b.denominator);
-	if(a.denominator == 0 || b.denominator == 0){
-		printf("Syntax Error Denominator should not be 0!!!");
-	}else{
-	c.numerator = a.numerator*b.numerator;
-	c.denominator = a.denominator*b.denominator;
-	printf("The answer is: %d/%d", c.numerator, c.denominator);
-	}
+// Fraction subtractFraction(Fraction a, Fraction b);
+// Fraction multiplyFraction(Fraction a, Fraction b);
+// Fraction divideFraction(Fraction a, Fraction b);
+
+// Fraction simplyFraction(Fraction f);
+
+Fraction addAllFractions(FracCollection fracs) {
+    Fraction result = newFraction(0,1);
+    int i;
+
+    for(i=0; i<fracs.count; ++i) {
+        result = addFraction(result, fracs.fracs[i]); 
+    }
+
+    return result;
 }
 
-void division(fraction a, fraction b)
-{
-    fraction c;
-	printf("Enter first numerator:\n ");
-	scanf("%d", &a.numerator);
-	printf("Enter first denominator:\n ");
-	scanf("%d", &a.denominator);
-	printf("Enter second numerator:\n ");
-	scanf("%d", &b.numerator);
-	printf("Enter second denominator:\n ");
-	scanf("%d", &b.denominator);
-	if(a.denominator == 0 || b.denominator == 0){
-		printf("Syntax Error Denominator should not be 0!!!");
-	}else{
-	c.numerator = a.numerator*b.denominator;
-	c.denominator = a.denominator*b.numerator;
-	printf("The answer is: %d/%d", c.numerator, c.denominator);
-	}
-}
 
-void convertImproper(fraction a)
-{
-	printf("Enter first numerator:\n ");
-	scanf("%d", &a.numerator);
-	printf("Enter first denominator:\n ");
-	scanf("%d", &a.denominator);
-	if(a.numerator<a.denominator){
-		printf("Entered fraction is not an improper fraction!!!");
-	}else if(a.numerator % a.denominator == 0){
-		a.wholeNum = a.numerator / a.denominator;
-		printf("the answer is: %d", a.wholeNum);
-	}else{
-		a.wholeNum = a.numerator / a.denominator;
-		a.numerator = a.numerator%a.denominator;
-		printf("The answer is: %d %d/%d\n", a.wholeNum, a.numerator, a.denominator); 
-	}
-			
-}
 

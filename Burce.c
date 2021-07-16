@@ -44,7 +44,7 @@ int main() {
     int i;
     int choice;
     Fraction x, y, z, w;
-    arr.fracs = (FracCollection*)malloc(sizeof(FracCollection)*MAX);
+    arr.fracs = (Fraction*)malloc(sizeof(Fraction)*MAX);
     arr.count = 0;
     arr.max = MAX;
     do {
@@ -326,14 +326,14 @@ Fraction multiplyAllFractions(FracCollection fracs) {
     return result;
 }
 Fraction divideAllFractions(FracCollection fracs) {
-    Fraction result = newFraction(1,1);// first fraction gets flipped here, needs to be a value that results the same
+    Fraction result = newFraction(1,1);// first fraction gets flipped here, needs to be a value that results the same // kay initial value sa result kay 1/1, then og 
     Fraction temp;
     int i;
     if(fracs.count == 0){
         printf("Collection is Empty");
     }
     for(i=0; i<fracs.count; ++i) {
-        result = divideFraction(result, fracs.fracs[i]);
+        result = divideFraction(result, fracs.fracs[i]); 
         if(i==0){ // reciprocal function as result when i=0 inverses the fraction
             temp.num = result.num;
             result.num = result.den;
