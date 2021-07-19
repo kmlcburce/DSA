@@ -77,8 +77,6 @@ int main() {
                 displayFraction(z);
                 printf("\n");
                 displayFraction(w);
-                printf("\n");
-                checkIfProperFraction(w);
                 break;
             case 3:
             	printf("Multiplying two fractions...\n");
@@ -93,8 +91,6 @@ int main() {
                 displayFraction(z);
                 printf("\n");
                 displayFraction(w);
-                printf("\n");
-                checkIfProperFraction(w);
                 break;
             case 4:
             	printf("Dividing two fractions...\n");
@@ -109,8 +105,6 @@ int main() {
                 displayFraction(z);
                 printf("\n");
                 displayFraction(w);
-                printf("\n");
-                checkIfProperFraction(w);
                 break;
             case 5:
                 break;
