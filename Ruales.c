@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef char String[20];
 
@@ -8,6 +9,11 @@ typedef struct {
     int den;
 } Fraction;
 
+typedef struct node{
+    Fraction fracs;
+    struct node *next;
+}NodeType,*NodePtr;
+
 typedef struct {
     Fraction *fracs;
     int count;
@@ -16,6 +22,9 @@ typedef struct {
 
 Fraction newFraction(int num, int den);
 Fraction inputFraction(String msg);
+
+//linked list
+void insertFirst(NodePtr *fracptr,Fraction f);
 
 //display
 void displayFraction(Fraction f);
@@ -31,6 +40,7 @@ Fraction simplyFraction(Fraction a);
 Fraction addAllFractions(FracCollection fracs); 
 
 int main() {
+    NodePtr myList = NULL;
     String menu[5] = {"Add", "Subtract", "Multiply", "Divide", "EXIT"};
     int i;
     int choice;
@@ -222,8 +232,41 @@ Fraction addAllFractions(FracCollection f) {
     return result;
 }
 
+void insertFirst(NodePtr *fracptr,Fraction f){
+    NodePtr temp = (NodePtr)malloc(sizeof(NodeType));
+
+    if(temp != NULL){
+        temp->fracs = f;
+        temp->next = *fracptr;
+        *fracptr = temp;
+    }
+}
+
+void deleteFirst(NodePtr *fracptr){
+    NodePtr temp;
+    
+    if(*fracptr!=NULL){
+        temp = *fracptr;
+        *fracptr = temp->next;
+        free(temp);
+    }
+}
+
+void insertLinkedSorted(NodePtr *fracptr, Fraction f){
+    NodePtr temp = (NodePtr)malloc(sizeof(NodeType));
+    NodePtr trav;
 
 
+    if(temp != NULL){
+        for(trav = *fracptr; trav != NULL && trav->fracs.num >= 8; trav = trav->next){}
+        temp->fracs = f;
+        temp->next = trav;
+        trav = temp;
+    }
+}
 
-
-
+void displayLinked(NodePtr fracptr){
+    for(;fracptr!=NULL;fracptr=fracptr->next){
+        printf("%d",fracptr->fracs.num,fracptr->fracs.num);
+    }
+}
