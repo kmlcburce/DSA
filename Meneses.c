@@ -1,3 +1,325 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef char String[20];
+
+typedef struct {
+    int whole;
+    int num;
+    int den;
+} Fraction;
+
+typedef struct {
+    Fraction *fracs;
+    int count;
+    int max;
+} FracCollection; 
+
+
+Fraction newFraction(int num, int den);
+Fraction inputFraction(String msg);
+
+void displayFraction(Fraction f);
+
+Fraction addFraction(Fraction a, Fraction b);
+Fraction subtractFraction(Fraction a, Fraction b);
+Fraction multiplyFraction(Fraction a, Fraction b);
+Fraction divideFraction(Fraction a, Fraction b);
+Fraction simplifyFraction(Fraction f);
+Fraction addAllFractions(FracCollection fracs); 
+int getGCD(Fraction f);
+Fraction retMixfrac(Fraction f);
+
+Fraction addAllFractions(FracCollection fracs);
+
+int main() 
+{
+    String menu[6] = {"Add", "Subtract", "Multiply", "Divide", "Multiple Fractions", "EXIT"};
+    String menu1[5] = {"Add", "Subtract", "Multiply", "Divide", "EXIT"};
+  
+    int i,trav,gcd=0;
+    int add1=0;
+    int addloop;
+    int addhold;
+    int choice,choice1;
+    Fraction x, y, z, w,a;
+    Fraction mix;
+	
+    do {
+        printf("\n\nFRACTION CALCULATOR\n");
+        for(i=0; i<6; ++i) {
+            printf("[%d.] %s\n", i+1, menu[i]);
+        }
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Adding two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = addFraction(x, y);
+                w = simplifyFraction(z);
+                mix = retMixfrac(w);
+                displayFraction(x);
+                printf(" + ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                gcd = getGCD(z);
+                printf("\nGCD: %d", gcd);
+                printf("\nReduce by GCD: ");
+                displayFraction(w);
+                if(mix.whole !=0){
+                	printf("\nMix Fraction: %d %d/%d", mix.whole, mix.num,mix.den);
+				}else{
+					printf("\nMix Fraction: %d/%d", mix.num,mix.den);
+				}
+                break;
+            case 2:
+            	printf("Subtracting two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = subtractFraction(x, y);
+                if(z.num == 0){
+                	displayFraction(x);
+                	printf(" - ");
+	                displayFraction(y);
+	                printf(" = ");
+	                displayFraction(z);
+	                printf(" = %d", z.num);
+				}else{
+					w = simplifyFraction(z);
+	                mix = retMixfrac(w);
+	                displayFraction(x);
+	                printf(" - ");
+	                displayFraction(y);
+	                printf(" = ");
+	                displayFraction(z);
+	                gcd = getGCD(z);
+	                printf("\nGCD: %d", gcd);
+	                printf("\nReduce by GCD: ");
+	                displayFraction(w);
+	                if(mix.whole !=0){
+	                	printf("\nMix Fraction: %d %d/%d", mix.whole, mix.num,mix.den);
+					}else{
+						printf("\nMix Fraction: %d/%d", mix.num,mix.den);
+					}
+				}
+                break;
+            case 3:
+            	printf("Multiplying two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = multiplyFraction(x, y);
+                w = simplifyFraction(z);
+                mix = retMixfrac(w);
+                displayFraction(x);
+                printf(" x ");
+                displayFraction(y);
+                printf(" = ");
+                displayFraction(z);
+                gcd = getGCD(z);
+                printf("\nGCD: %d", gcd);
+                printf("\nReduce by GCD: ");
+                displayFraction(w);
+                if(mix.whole !=0){
+                	printf("\nMix Fraction: %d %d/%d", mix.whole, mix.num,mix.den);
+				}else{
+					printf("\nMix Fraction: %d/%d", mix.num,mix.den);
+				}
+                break;
+            case 4:
+            	printf("Dividing two fractions...\n");
+                x = inputFraction("Enter fraction 1");
+                y = inputFraction("Enter fraction 2");
+                z = divideFraction(x, y);
+                if(z.num == z.den){
+                	displayFraction(x);
+                	printf(" / ");
+	                displayFraction(y);
+	                printf(" = ");
+	                displayFraction(z);
+	                printf(" = 1");
+				}else{
+					w = simplifyFraction(z);
+	                mix = retMixfrac(w);
+	                displayFraction(x);
+	                printf(" / ");
+	                displayFraction(y);
+	                printf(" = ");
+	                displayFraction(z);
+	                gcd = getGCD(z);
+	                printf("\nGCD: %d", gcd);
+	                printf("\nReduce by GCD: ");
+	                displayFraction(w);
+	                if(mix.whole !=0){
+	                	printf("\nMix Fraction: %d %d/%d", mix.whole, mix.num,mix.den);
+					}else{
+						printf("\nMix Fraction: %d/%d", mix.num,mix.den);
+					}
+				}
+               
+                break;
+            case 5:
+        		printf("\nMultiple Fraction Choices:\n");
+            	for(trav=0; trav<5; ++trav) {
+            	printf("[%d.] %s\n", trav+1, menu1[trav]);
+        		}
+        		printf("\nEnter your choice: ");
+        		scanf("%d", &choice);
+				do{
+					switch(choice) {	
+					case 1:
+						printf("\nAdding multiple fractions...\n");
+						printf("How many fractions: ");
+						scanf("%d", &add1);
+						FracCollection *f = malloc(sizeof(FracCollection)*add1);
+						for(addloop=0 ; addloop < add1 ; addloop++){
+							x = inputFraction("Enter fraction");
+							
+						}
+						if(addloop == add1){
+							return 0;
+						}
+						break;
+					case 2:
+					case 3:
+					case 4:
+						break;
+					case 5:
+						printf("EXITTING....");
+						return 0;
+					default:
+                		printf("Invalid Input");
+					}
+				}while(choice1 != 5);
+            case 6:
+            	printf("EXITTING....");
+                break;
+            default:
+                printf("Invalid Input");
+        }
+
+    } while(choice != 6);
+
+    return 0;
+}
+
+Fraction addAllFractions(FracCollection fracs) {
+    Fraction result = newFraction(0,1);
+    int i;
+
+    for(i=0; i<fracs.count; ++i) {
+        result = addFraction(result, fracs.fracs[i]); 
+    }
+
+    return result;
+}
+
+
+
+Fraction newFraction(int num, int den) {
+    Fraction f = {0, num, den};
+
+    return f;
+} 
+
+Fraction inputFraction(String msg) {
+    Fraction f;
+
+    printf("%s: ", msg);
+    scanf("%d/%d", &f.num, &f.den);
+
+    return f;
+}
+
+void displayFraction(Fraction f) {
+    printf("%d/%d", f.num, f.den);
+}
+
+Fraction addFraction(Fraction a, Fraction b) 
+{
+    Fraction result;
+
+    result.den = a.den * b.den;
+    result.num = (a.num * b.den) + (b.num * a.den); 
+    
+    return result;
+}
+
+Fraction subtractFraction(Fraction a, Fraction b)
+{
+ 	Fraction result;
+
+	result.num = (a.num * b.den) - (b.num * a.den); 
+    result.den = a.den * b.den;
+    return result;
+}
+
+Fraction multiplyFraction(Fraction a, Fraction b)
+{
+	Fraction result;
+
+    result.den = a.den * b.den;
+    result.num = a.num * b.num; 
+    
+    return result;
+}
+
+Fraction divideFraction(Fraction a, Fraction b)
+{
+	Fraction result;
+
+    result.den = a.den * b.num;
+    result.num = a.num * b.den; 
+    
+    return result;
+}
+
+Fraction simplifyFraction(Fraction f)
+{
+	Fraction temp;
+	
+	temp.num = f.num / getGCD(f);
+	temp.den = f.den / getGCD(f);
+	
+	return temp;
+	
+}
+
+int getGCD(Fraction f)
+{
+    int gcd, remainder;
+
+    do{
+    	remainder = f.den % f.num;
+        f.den = f.num;
+        f.num = remainder;
+	}while (f.num != 0);
+	
+    gcd = abs(f.den);
+
+    return gcd;
+}
+
+Fraction retMixfrac(Fraction f)
+{
+	Fraction temp;
+	int remainder;
+	temp = simplifyFraction(f);
+	
+	remainder = temp.num % temp.den;
+	temp.whole =(temp.num-remainder)/temp.den;
+	temp.num = remainder;
+	
+	return temp;
+	
+}
+
+
+
+
 Create a structure for student that contains the following:
     studID, studName, studScore
 
@@ -139,15 +461,15 @@ typedef struct {
  int search(StudentList list, int id);
 
 
- Boolean insertSorted(StudentDynamicList *list, Student s); //lastname 
+ Boolean insertSorted(StudentDynamicList *list, Student s); 
 StudentList searchStudent(StudentDynamicList *list, String keyword);
  Name *getNamesPassed(Student list[], int n);
- StudentList getStudentPassed(StudentList list); //
+ StudentList getStudentPassed(StudentList list); 
  int main() {
      StudentList list = createStudentList();
 
     float s1[5] = {5.0, 5.0, 5.0, 1.0, 5.0};
-   float s2[5] = {3.0, 3.0, 3.0, 3.0, 3.0};
+   	float s2[5] = {3.0, 3.0, 3.0, 3.0, 3.0};
     float s3[5] = {1.0, 2.0, 2.0, 3.0, 3.0};
     float s4[5] = {3.0, 3.0, 2.0, 1.0, 1.0};
     float s5[5] = {1.0, 2.0, 1.0, 1.0, 1.0};
@@ -159,12 +481,12 @@ StudentList searchStudent(StudentDynamicList *list, String keyword);
      insertFirst(&list, createStudent(1004, createName("Gwapo", "Gibert", "Kaayo")));
   insertFirst(&list, createStudent(1005, createName("Fitz", "Napulihan", "Martin")));
 
-   recordScore(&list.studList[0], s1, 5); //ruales 
-    recordScore(&list.studList[1], s2, 5); //sugar
+   recordScore(&list.studList[0], s1, 5);  
+    recordScore(&list.studList[1], s2, 5); 
     recordScore(&list.studList[2], s3, 5);
-     recordScore(&list.studList[3], s4, 5); //yu
-     recordScore(&list.studList[4], s5, 5); //Joshua
-   recordScore(&list.studList[0], s2, 5); //paningbatan
+     recordScore(&list.studList[3], s4, 5); 
+     recordScore(&list.studList[4], s5, 5); 
+   recordScore(&list.studList[0], s2, 5); 
 
    printf("\n\nDisplay All Student:\n");
    displayStudents(list);
@@ -347,20 +669,6 @@ StudentList searchStudent(StudentDynamicList *list, String keyword);
  }
 
 
-
-
-  Create a structure for student that contains the following:
-      studID, studName, studScore
-
- // The name must be a structure also of a firstname, middlname, and lastname.
- // The student scores is an array of 5 scores. ( accepts values from 1.0 to 5.0)
-
-// // Create an array of 5 students.
-
-// // Create a function that will display a student information.
-// // Create a function that will display all the students in the array. 
-// // Create a function that will get the average score of a student.
-// // Create a function that will encode the 5 scores of the student.
 
  #include<stdio.h>
  #include<stdlib.h>
