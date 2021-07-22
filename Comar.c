@@ -18,6 +18,9 @@ typedef struct node{
 void initList(List* L);
 Fraction initFraction(int a, int b);
 void insertFirst(List* L, Fraction newData);
+void insertLast(List* L, Fraction newData);
+void insertSorted(List* L, Fraction newData);
+void deleteList(List* L, Fraction newData);
 
 void displayFraction(Fraction f);
 void displayList(List L);
@@ -65,6 +68,48 @@ void insertFirst(List* L, Fraction newData){
 		temp->f = newData;
 		temp->next = *L;
 		*L = temp;
+	}
+}
+
+//
+void insertLast(List* L, Fraction newData)
+{
+	List temp, *trav;
+	
+	temp = (List)malloc(sizeof(struct node));
+	
+	if(temp != NULL){
+		for(trav = L; *trav != NULL; trav = &(*trav)->next){}
+		temp->f = newData;
+		temp->next = *trav;
+		*trav = temp;
+	}
+		
+}
+
+void insertSorted(List* L, Fraction newData)
+{
+	List temp, *trav;
+	
+	temp = (List)malloc(sizeof(struct node));
+	
+	if(temp != NULL){
+		for(trav = L; *trav != NULL && (*trav)->f.whole < newData.whole; trav = &(*trav)->next){}
+		temp->f = newData;
+		temp->next = *trav;
+		*trav = temp;
+	}
+}
+
+void deleteList(List* L, Fraction newData)
+{
+	List temp, *trav;
+	
+	for(trav = L; *trav != NULL && (*trav)->f.whole != newData.whole; trav = &(*trav)->next){}
+	if(*trav != NULL){
+		temp = *trav;
+		*trav = temp->next;
+		free(temp);
 	}
 }
 
