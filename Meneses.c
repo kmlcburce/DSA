@@ -1,3 +1,41 @@
+//Fraction linked list
+
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct {
+    int num;
+    int denom;
+} frac;
+
+
+frac add(frac frac1, frac frac2);
+
+int main(int argc, char **argv){
+	int i;
+	int temp = 5;
+	
+
+	frac *fraction;
+	
+	fraction = (frac *) malloc(temp*sizeof(frac));
+	
+
+	fraction[0] = (frac) {5, 7};
+	fraction[1] = (frac) {11, 13};
+	fraction[2] = (frac) {17, 19};
+	fraction[3] = (frac) {23, 29};
+	fraction[4] = (frac) {2, 6};
+	
+//	printf("fraction 1 = %d / %d\n",f.num, f.denom);
+	
+	for(i = 0; i < temp; i++){
+			printf("fraction %d = %d / %d\n",i+1, fraction[i].num, fraction[i].denom);
+
+	}
+	
+}
+
 #include <stdio.h>
 #include <stdlib.h>
 
